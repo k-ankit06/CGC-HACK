@@ -154,9 +154,9 @@ const TouristDashboard = () => {
           </div>
           <div className="text-center">
             <motion.div 
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              className={`text-6xl font-bold mb-2 ${
+              
+              
+              className={`text-6xl font-bold mb-2 animate-pulse ${
                 safetyScore >= 80 ? 'text-success-600' : 
                 safetyScore >= 60 ? 'text-warning-600' : 
                 'text-danger-600'
