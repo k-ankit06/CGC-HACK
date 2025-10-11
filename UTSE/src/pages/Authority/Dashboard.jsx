@@ -160,3 +160,4 @@ const AuthorityDashboard = () => {
 }
 
 export default AuthorityDashboard
+
