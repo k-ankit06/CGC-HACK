@@ -70,7 +70,7 @@ const TouristLayout = () => {
               title="Notifications"
             >
               <Bell className="h-6 w-6" />
-              <span className="absolute top-1 right-1 h-3 w-3 bg-danger-500 rounded-full border-2 border-primary-600 animate-ping"></span>  {/* Ping animation */}
+              <span className="absolute top-1 right-1 h-3 w-3 bg-danger-500 rounded-full border-2 border-primary-600 animate-pulse"></span>  {/* Ping animation */}
             </motion.button>
             
             <div className="flex items-center space-x-3 pl-4 border-l border-primary-400">
