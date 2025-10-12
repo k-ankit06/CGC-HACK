@@ -1,218 +1,392 @@
-import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { TrendingUp, Users, AlertTriangle, MapPin, Calendar } from 'lucide-react'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Bar, Line, Pie } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  PointElement,
+  LineElement,
+  ArcElement
+} from 'chart.js';
 
-const AuthorityAnalytics = () => {
-  const monthlyData = [
-    { month: 'Jan', tourists: 2400, incidents: 45, resolved: 42, revenue: 12000 },
-    { month: 'Feb', tourists: 2210, incidents: 38, resolved: 36, revenue: 11000 },
-    { month: 'Mar', tourists: 2780, incidents: 42, resolved: 40, revenue: 14000 },
-    { month: 'Apr', tourists: 3100, incidents: 35, resolved: 34, revenue: 15500 },
-    { month: 'May', tourists: 3500, incidents: 28, resolved: 28, revenue: 17500 },
-    { month: 'Jun', tourists: 3800, incidents: 22, resolved: 22, revenue: 19000 },
-  ]
+// Register the required components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  PointElement,
+  LineElement,
+  ArcElement
+);
 
-  const incidentTypes = [
-    { name: 'Medical', value: 35, color: '#ef4444' },
-    { name: 'Theft', value: 25, color: '#f59e0b' },
-    { name: 'Lost Tourist', value: 20, color: '#3b82f6' },
-    { name: 'Language', value: 12, color: '#8b5cf6' },
-    { name: 'Others', value: 8, color: '#10b981' },
-  ]
+const Analytics = () => {
+  const [analyticsData, setAnalyticsData] = useState({
+    incidents: [],
+    safetyScores: [],
+    responseTimes: []
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('incidents');
 
-  const locationData = [
-    { location: 'Taj Mahal', tourists: 4500, incidents: 12 },
-    { location: 'India Gate', tourists: 3800, incidents: 18 },
-    { location: 'Red Fort', tourists: 3200, incidents: 22 },
-    { location: 'Qutub Minar', tourists: 2500, incidents: 8 },
-    { location: 'Gateway of India', tourists: 4200, incidents: 15 },
-  ]
+  useEffect(() => {
+    // Simulate fetching analytics data
+    const fetchAnalyticsData = async () => {
+      try {
+        setIsLoading(true);
+
+        // In a real app, you would fetch this from your API
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Mock data - in a real app, this would come from your API
+        const mockIncidents = {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [
+            {
+              label: 'Incidents Reported',
+              data: [12, 19, 15, 18, 22, 25],
+              backgroundColor: 'rgba(59, 130, 246, 0.5)',
+              borderColor: 'rgba(59, 130, 246, 1)',
+              borderWidth: 1
+            }
+          ]
+        };
+
+        const mockSafetyScores = {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [
+            {
+              label: 'Average Safety Score',
+              data: [75, 78, 72, 76, 79, 81],
+              backgroundColor: 'rgba(16, 185, 129, 0.5)',
+              borderColor: 'rgba(16, 185, 129, 1)',
+              borderWidth: 1,
+              tension: 0.3
+            }
+          ]
+        };
+
+        const mockResponseTimes = {
+          labels: ['Police', 'Medical', 'Fire', 'Support'],
+          datasets: [
+            {
+              label: 'Average Response Time (minutes)',
+              data: [4.2, 5.8, 6.5, 3.9],
+              backgroundColor: [
+                'rgba(59, 130, 246, 0.7)',
+                'rgba(16, 185, 129, 0.7)',
+                'rgba(245, 158, 11, 0.7)',
+                'rgba(153, 142, 255, 0.7)'
+              ],
+              borderColor: [
+                'rgba(59, 130, 246, 1)',
+                'rgba(16, 185, 129, 1)',
+                'rgba(245, 158, 11, 1)',
+                'rgba(153, 142, 255, 1)'
+              ],
+              borderWidth: 1
+            }
+          ]
+        };
+
+        setAnalyticsData({
+          incidents: mockIncidents,
+          safetyScores: mockSafetyScores,
+          responseTimes: mockResponseTimes
+        });
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching analytics data:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchAnalyticsData();
+  }, []);
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold text-gray-900">Analytics & Insights</h2>
-        <p className="text-gray-600 mt-1">Comprehensive data analysis and performance metrics</p>
-      </div>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="card bg-gradient-to-br from-primary-500 to-primary-600 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-primary-100 text-sm">Total Tourists (YTD)</p>
-              <p className="text-4xl font-bold mt-1">18,790</p>
-              <p className="text-sm text-primary-200 mt-1">↑ 24% vs last year</p>
-            </div>
-            <Users className="h-12 w-12 text-primary-200" />
-          </div>
-        </div>
-        <div className="card bg-gradient-to-br from-success-500 to-success-600 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-success-100 text-sm">Resolution Rate</p>
-              <p className="text-4xl font-bold mt-1">96.5%</p>
-              <p className="text-sm text-success-200 mt-1">↑ 3.2% improvement</p>
-            </div>
-            <TrendingUp className="h-12 w-12 text-success-200" />
-          </div>
-        </div>
-        <div className="card bg-gradient-to-br from-warning-500 to-warning-600 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-warning-100 text-sm">Avg Response Time</p>
-              <p className="text-4xl font-bold mt-1">3.2min</p>
-              <p className="text-sm text-warning-200 mt-1">↓ 18% faster</p>
-            </div>
-            <AlertTriangle className="h-12 w-12 text-warning-200" />
-          </div>
-        </div>
-        <div className="card bg-gradient-to-br from-purple-500 to-purple-600 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-purple-100 text-sm">Safety Score</p>
-              <p className="text-4xl font-bold mt-1">94.2%</p>
-              <p className="text-sm text-purple-200 mt-1">↑ 2.8% increase</p>
-            </div>
-            <TrendingUp className="h-12 w-12 text-purple-200" />
-          </div>
-        </div>
-      </div>
-
-      {/* Charts Row 1 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="card">
-          <h3 className="text-xl font-bold mb-4">Tourist & Incident Trends</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis yAxisId="left" />
-              <YAxis yAxisId="right" orientation="right" />
-              <Tooltip />
-              <Legend />
-              <Line yAxisId="left" type="monotone" dataKey="tourists" stroke="#3b82f6" strokeWidth={2} name="Tourists" />
-              <Line yAxisId="right" type="monotone" dataKey="incidents" stroke="#ef4444" strokeWidth={2} name="Incidents" />
-            </LineChart>
-          </ResponsiveContainer>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white p-6 rounded-lg shadow-md"
+      >
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-indigo-800">Tourist Safety Analytics</h2>
         </div>
 
-        <div className="card">
-          <h3 className="text-xl font-bold mb-4">Incident Distribution by Type</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={incidentTypes}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey="value"
+        <div className="flex flex-wrap gap-2 mb-6">
+          <button
+            onClick={() => setActiveTab('incidents')}
+            className={`px-4 py-2 rounded-md text-sm font-medium ${activeTab === 'incidents' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+          >
+            Incident Trends
+          </button>
+          <button
+            onClick={() => setActiveTab('safetyScores')}
+            className={`px-4 py-2 rounded-md text-sm font-medium ${activeTab === 'safetyScores' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+          >
+            Safety Scores
+          </button>
+          <button
+            onClick={() => setActiveTab('responseTimes')}
+            className={`px-4 py-2 rounded-md text-sm font-medium ${activeTab === 'responseTimes' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+          >
+            Response Times
+          </button>
+        </div>
+
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {activeTab === 'incidents' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="bg-white p-6 rounded-lg shadow-md"
               >
-                {incidentTypes.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Incident Trends</h3>
+                <div className="h-80">
+                  <Bar
+                    data={analyticsData.incidents}
+                    options={{
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          position: 'top',
+                        },
+                        title: {
+                          display: true,
+                          text: 'Monthly Incident Reports',
+                          font: {
+                            size: 14
+                          }
+                        },
+                        tooltip: {
+                          callbacks: {
+                            label: function(context) {
+                              return `${context.parsed.y} incidents`;
+                            }
+                          }
+                        }
+                      },
+                      scales: {
+                        y: {
+                          beginAtZero: true,
+                          ticks: {
+                            stepSize: 1
+                          }
+                        }
+                      }
+                    }}
+                  />
+                </div>
+              </motion.div>
+            )}
 
-      {/* Charts Row 2 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="card">
-          <h3 className="text-xl font-bold mb-4">Location-wise Analysis</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={locationData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="location" angle={-15} textAnchor="end" height={80} />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="tourists" fill="#3b82f6" name="Tourists" />
-              <Bar dataKey="incidents" fill="#ef4444" name="Incidents" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+            {activeTab === 'safetyScores' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="bg-white p-6 rounded-lg shadow-md"
+              >
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Safety Scores</h3>
+                <div className="h-80">
+                  <Line
+                    data={analyticsData.safetyScores}
+                    options={{
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          position: 'top',
+                        },
+                        title: {
+                          display: true,
+                          text: 'Monthly Average Safety Scores',
+                          font: {
+                            size: 14
+                          }
+                        },
+                        tooltip: {
+                          callbacks: {
+                            label: function(context) {
+                              return `${context.parsed.y}/100`;
+                            }
+                          }
+                        }
+                      },
+                      scales: {
+                        y: {
+                          beginAtZero: false,
+                          min: 0,
+                          max: 100,
+                          ticks: {
+                            stepSize: 10
+                          }
+                        }
+                      }
+                    }}
+                  />
+                </div>
+              </motion.div>
+            )}
 
-        <div className="card">
-          <h3 className="text-xl font-bold mb-4">Resolution Performance</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="incidents" stroke="#f59e0b" strokeWidth={2} name="Total Incidents" />
-              <Line type="monotone" dataKey="resolved" stroke="#10b981" strokeWidth={2} name="Resolved" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+            {activeTab === 'responseTimes' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="bg-white p-6 rounded-lg shadow-md"
+              >
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Response Times</h3>
+                <div className="h-80">
+                  <Pie
+                    data={analyticsData.responseTimes}
+                    options={{
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          position: 'top',
+                        },
+                        title: {
+                          display: true,
+                          text: 'Average Response Times by Team',
+                          font: {
+                            size: 14
+                          }
+                        },
+                        tooltip: {
+                          callbacks: {
+                            label: function(context) {
+                              return `${context.parsed.y} minutes`;
+                            }
+                          }
+                        }
+                      }
+                    }}
+                  />
+                </div>
+              </motion.div>
+            )}
+          </div>
+        )}
+      </motion.div>
 
-      {/* Performance Summary */}
-      <div className="card">
-        <h3 className="text-xl font-bold mb-4">Performance Summary</h3>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="bg-white p-6 rounded-lg shadow-md"
+      >
+        <h2 className="text-2xl font-bold text-indigo-800 mb-4">Key Metrics</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="bg-gray-50 p-4 rounded-lg"
+          >
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">Total Incidents</h3>
+            <p className="text-3xl font-bold text-indigo-600">124</p>
+            <p className="text-sm text-gray-500 mt-1">This month</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="bg-gray-50 p-4 rounded-lg"
+          >
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">Average Safety Score</h3>
+            <p className="text-3xl font-bold text-green-600">78/100</p>
+            <p className="text-sm text-gray-500 mt-1">Current rating</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="bg-gray-50 p-4 rounded-lg"
+          >
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">Response Time</h3>
+            <p className="text-3xl font-bold text-yellow-600">4.5 min</p>
+            <p className="text-sm text-gray-500 mt-1">Average response</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="bg-gray-50 p-4 rounded-lg"
+          >
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">Tourist Satisfaction</h3>
+            <p className="text-3xl font-bold text-blue-600">89%</p>
+            <p className="text-sm text-gray-500 mt-1">Satisfaction rate</p>
+          </motion.div>
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+        className="bg-white p-6 rounded-lg shadow-md"
+      >
+        <h2 className="text-2xl font-bold text-indigo-800 mb-4">Recent Incidents</h2>
+
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="text-left py-3 px-4 font-semibold">Metric</th>
-                <th className="text-left py-3 px-4 font-semibold">Current</th>
-                <th className="text-left py-3 px-4 font-semibold">Target</th>
-                <th className="text-left py-3 px-4 font-semibold">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Incident ID</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Response Time</th>
               </tr>
             </thead>
-            <tbody>
-              <tr className="border-t">
-                <td className="py-3 px-4">Average Response Time</td>
-                <td className="py-3 px-4 font-semibold">3.2 minutes</td>
-                <td className="py-3 px-4"> 5 minutes</td>
-                <td className="py-3 px-4">
-                  <span className="px-2 py-1 bg-success-100 text-success-700 rounded-full text-xs font-semibold">
-                    Achieved
-                  </span>
-                </td>
-              </tr>
-              <tr className="border-t">
-                <td className="py-3 px-4">Incident Resolution Rate</td>
-                <td className="py-3 px-4 font-semibold">96.5%</td>
-                <td className="py-3 px-4"> 95%</td>
-                <td className="py-3 px-4">
-                  <span className="px-2 py-1 bg-success-100 text-success-700 rounded-full text-xs font-semibold">
-                    Achieved
-                  </span>
-                </td>
-              </tr>
-              <tr className="border-t">
-                <td className="py-3 px-4">Tourist Satisfaction</td>
-                <td className="py-3 px-4 font-semibold">91.2%</td>
-                <td className="py-3 px-4"> 90%</td>
-                <td className="py-3 px-4">
-                  <span className="px-2 py-1 bg-success-100 text-success-700 rounded-full text-xs font-semibold">
-                    Achieved
-                  </span>
-                </td>
-              </tr>
-              <tr className="border-t">
-                <td className="py-3 px-4">Safety Score</td>
-                <td className="py-3 px-4 font-semibold">94.2%</td>
-                <td className="py-3 px-4"> 95%</td>
-                <td className="py-3 px-4">
-                  <span className="px-2 py-1 bg-warning-100 text-warning-700 rounded-full text-xs font-semibold">
-                    Near Target
-                  </span>
-                </td>
-              </tr>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {[
+                { id: '#INC-2023-00124', type: 'Theft', location: 'City Center', date: '2023-11-15 14:30', status: 'Resolved', responseTime: '3 min' },
+                { id: '#INC-2023-00123', type: 'Medical Emergency', location: 'Beach Area', date: '2023-11-14 09:15', status: 'Resolved', responseTime: '5 min' },
+                { id: '#INC-2023-00122', type: 'Lost Tourist', location: 'Historical District', date: '2023-11-13 18:45', status: 'Resolved', responseTime: '7 min' },
+                { id: '#INC-2023-00121', type: 'Transport Issue', location: 'Airport', date: '2023-11-12 11:20', status: 'Resolved', responseTime: '4 min' },
+                { id: '#INC-2023-00120', type: 'Scam Report', location: 'Market Square', date: '2023-11-11 16:00', status: 'Resolved', responseTime: '6 min' },
+              ].map((incident, index) => (
+                <tr key={index} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{incident.id}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{incident.type}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{incident.location}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{incident.date}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <span className={`px-2 py-1 rounded-full text-xs ${incident.status === 'Resolved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                      {incident.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{incident.responseTime}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </motion.div>
     </div>
-  )
-}
+  );
+};
 
-export default AuthorityAnalytics
+export default Analytics;
