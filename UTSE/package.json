@@ -1,39 +1,30 @@
 {
   "name": "tourist-safety-system",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "lint": "eslint . --ext .js,.jsx --report-unused-disable-directives --max-warnings 0",
-    "prepare": "husky install"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.4.1",
     "axios": "^1.12.2",
-    "chart.js": "^4.5.0",
-    "framer-motion": "^10.18.0",
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.294.0",
+    "qrcode.react": "^3.2.0",
     "react": "^18.3.1",
-    "react-chartjs-2": "^5.3.0",
     "react-dom": "^18.3.1",
-    "react-icons": "^4.12.0",
-    "react-router-dom": "^6.30.1"
+    "react-router-dom": "^6.30.1",
+    "recharts": "^2.15.4"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^4.0.0",
-    "autoprefixer": "^10.4.14",
-    "eslint": "^8.39.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.3.4",
-    "postcss": "^8.4.23",
-    "prettier": "^2.8.8",
-    "tailwindcss": "^3.4.18",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6",
     "vite": "^7.1.9"
   }
 }

@@ -1,64 +1,22 @@
-// import { Navigate } from 'react-router-dom'
-// import { useAuth } from './AuthContext'
+import { Navigate } from 'react-router-dom'
+import { useAuth } from './AuthContext'
 
-// const ProtectedRoute = ({ children, requiredRole }) => {
-//   const { user } = useAuth()
+const ProtectedRoute = ({ children, requiredRole }) => {
+  const { user } = useAuth()
 
-//   if (!user) {
-//     return <Navigate to="/login" />
-//   }
-
-//   if (requiredRole && user.role !== requiredRole) {
-//     return <Navigate to={`/${user.role}/dashboard`} />
-//   }
-
-//   return children
-// }
-
-// export default ProtectedRoute
-
-// import { useAuth } from '../Auth/AuthContext';
-// import { Navigate } from 'react-router-dom';
-
-// const ProtectedRoute = ({ children, allowedRoles }) => {
-//   const { user, loading } = useAuth();
-
-//   if (loading) {
-//     return <div className="flex justify-center items-center h-screen">Loading...</div>;
-//   }
-
-//   if (!user) {
-//     return <Navigate to="/login" replace />;
-//   }
-
-//   if (allowedRoles && !allowedRoles.includes(user.role)) {
-//     return <Navigate to="/unauthorized" replace />;
-//   }
-
-//   return children;
-// };
-
-// export default ProtectedRoute;
-
-import { useAuth } from '../Auth/AuthContext';
-import { Navigate, Outlet } from 'react-router-dom';
-
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
-  }
-
+  // If user is not logged in, redirect to login page
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" />
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/unauthorized" replace />;
+  // If a role is required and the user's role doesn't match, redirect them
+  if (requiredRole && user.role !== requiredRole) {
+    // Redirects user to their own dashboard if they try to access a wrong route
+    return <Navigate to={`/${user.role}/dashboard`} />
   }
 
-  return children ? children : <Outlet />;
-};
+  // If checks pass, render the requested component
+  return children
+}
 
-export default ProtectedRoute;
+export default ProtectedRoute
