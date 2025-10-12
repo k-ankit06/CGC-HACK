@@ -1,34 +1,41 @@
-import { useEffect } from 'react'
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
-import { useAuth } from '../Auth/AuthContext'
+import { useState, useRef, useEffect } from 'react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../Auth/AuthContext';
 import { 
-  Globe, 
-  LayoutDashboard, 
-  FileText, 
-  Shield, 
-  AlertTriangle, 
-  Map, 
-  CreditCard, 
-  Languages,
-  LogOut,
-  Bell,
-  User,
-  MapPin
-} from 'lucide-react'
-import { motion } from 'framer-motion'
+  Globe, LayoutDashboard, FileText, Shield, AlertTriangle, Map, CreditCard, Languages,
+  LogOut, Bell, User, MapPin, Edit 
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const TouristLayout = () => {
-  const { user, logout } = useAuth()
-  const location = useLocation()
-  const navigate = useNavigate()
+  const { user, logout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
-    // Agar user registered nahi hai AUR woh registration page par nahi hai,
-    // toh use registration page par bhej do. Isse infinite loop nahi hoga.
     if (!user?.isRegistered && location.pathname !== '/tourist/registration') {
       navigate('/tourist/registration');
     }
   }, [user, location.pathname, navigate]);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   const menuItems = [
     { path: '/tourist/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -39,15 +46,11 @@ const TouristLayout = () => {
     { path: '/tourist/safe-routes', icon: MapPin, label: 'Safe Routes' },
     { path: '/tourist/guide', icon: Map, label: 'Travel Guide' },
     { path: '/tourist/translator', icon: Languages, label: 'Language Translator' },
-  ]
-
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+      {/* Header Section */}
       <motion.header 
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -56,20 +59,15 @@ const TouristLayout = () => {
       >
         <div className="px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <motion.div 
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-              className="p-2 bg-white rounded-full shadow-md"
-            >
+            <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }} className="p-2 bg-white rounded-full shadow-md">
               <Globe className="h-8 w-8 text-primary-600" />
             </motion.div>
             <div>
-              <h1 className="text-2xl font-bold text-white">
-                Tourist Safety Portal
-              </h1>
+              <h1 className="text-2xl font-bold text-white">Tourist Safety Portal</h1>
               <p className="text-sm text-primary-100">Your safety companion 🌟</p>
             </div>
           </div>
+          
           <div className="flex items-center space-x-4">
             <motion.button 
               whileHover={{ scale: 1.1 }}
@@ -79,32 +77,54 @@ const TouristLayout = () => {
               <Bell className="h-6 w-6" />
               <span className="absolute top-1 right-1 h-3 w-3 bg-danger-500 rounded-full border-2 border-primary-600 animate-pulse"></span>
             </motion.button>
-            <div className="flex items-center space-x-3 pl-4 border-l border-primary-400">
-              <div className="text-right">
-                <p className="text-sm font-semibold text-white">{user?.name}</p>
-                <p className="text-xs text-primary-100">{user?.country || 'Tourist'}</p>
-              </div>
-              <motion.div 
-                whileHover={{ scale: 1.1 }}
-                className="h-10 w-10 bg-white rounded-full flex items-center justify-center shadow-md"
+            
+            <div className="relative pl-4 border-l border-primary-400" ref={dropdownRef}>
+              <button 
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)} 
+                className="flex items-center space-x-3"
               >
-                <User className="h-6 w-6 text-primary-600" />
-              </motion.div>
-              <motion.button 
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                transition={{ duration: 0.3 }}
-                onClick={handleLogout}
-                className="p-2 text-white hover:bg-white/20 rounded-lg transition-colors"
-                title="Logout"
-              >
-                <LogOut className="h-5 w-5" />
-              </motion.button>
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-white">{user?.name}</p>
+                  <p className="text-xs text-primary-100">{user?.country || 'Tourist'}</p>
+                </div>
+                <motion.div 
+                  whileHover={{ scale: 1.1 }}
+                  className="h-10 w-10 bg-white rounded-full flex items-center justify-center shadow-md"
+                >
+                  <User className="h-6 w-6 text-primary-600" />
+                </motion.div>
+              </button>
+              
+              <AnimatePresence>
+                {isDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
+                  >
+                    <Link to="/tourist/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Profile
+                    </Link>
+                    <button 
+                      onClick={handleLogout} 
+                      className="w-full text-left flex items-center px-4 py-2 text-sm text-danger-600 hover:bg-danger-50"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Logout
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
       </motion.header>
 
+      {/* YEH HISSA AAPNE MISS KAR DIYA THA */}
       <div className="flex">
+        {/* Sidebar Section */}
         <motion.aside 
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -114,8 +134,8 @@ const TouristLayout = () => {
           <nav className="p-4">
             <ul className="space-y-2">
               {menuItems.map((item) => {
-                const Icon = item.icon
-                const isActive = location.pathname === item.path
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
                 return (
                   <motion.li 
                     key={item.path}
@@ -136,12 +156,13 @@ const TouristLayout = () => {
                       <span className="font-medium">{item.label}</span>
                     </Link>
                   </motion.li>
-                )
+                );
               })}
             </ul>
           </nav>
         </motion.aside>
 
+        {/* Main Content Section */}
         <motion.main 
           key={location.pathname}
           initial={{ opacity: 0, x: 20 }}
@@ -154,7 +175,7 @@ const TouristLayout = () => {
         </motion.main>
       </div>
     </div>
-  )
+  );
 }
 
-export default TouristLayout
+export default TouristLayout;

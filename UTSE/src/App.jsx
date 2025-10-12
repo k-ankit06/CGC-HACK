@@ -27,6 +27,9 @@ import SafeRoutes from './pages/Tourist/SafeRoutes'
 import LanguageTranslator from './pages/Tourist/LanguageTranslator'
 import { AnimatePresence } from 'framer-motion'  // For page transitions
 
+// --- NAYA CHANGE 1: Naye Profile page ko yahaan import karein ---
+import Profile from './pages/Profile'
+
 function App() {
   return (
     <Router>
@@ -51,6 +54,9 @@ function App() {
               <Route path="analytics" element={<AuthorityAnalytics />} />
               <Route path="smart-id" element={<SmartIDSystem />} />
               <Route path="response-team" element={<ResponseTeam />} />
+              
+              {/* --- NAYA CHANGE 2: Authority ke liye Profile route yahaan add karein --- */}
+              <Route path="profile" element={<Profile />} />
             </Route>
 
             {/* Tourist Routes */}
@@ -67,6 +73,9 @@ function App() {
               <Route path="my-card" element={<MyTouristCard />} />
               <Route path="safe-routes" element={<SafeRoutes />} />
               <Route path="translator" element={<LanguageTranslator />} />
+
+              {/* --- NAYA CHANGE 3: Tourist ke liye Profile route yahaan add karein --- */}
+              <Route path="profile" element={<Profile />} />
             </Route>
 
             {/* Default Route */}
