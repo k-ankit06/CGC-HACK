@@ -2,11 +2,11 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Shield, Globe, AlertCircle, CheckCircle } from 'lucide-react'
 import { useAuth } from './AuthContext'
-import { motion } from 'framer-motion'  // For animations
+import { motion } from 'framer-motion'
 
 const SignUp = () => {
   const [userType, setUserType] = useState('tourist')
-  const [touristType, setTouristType] = useState('international')  // New: Domestic or International
+  const [touristType, setTouristType] = useState('international')
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,7 +15,7 @@ const SignUp = () => {
     confirmPassword: '',
     country: '',
     passportNumber: '',
-    aadhaarNumber: '',  // New: For domestic
+    aadhaarNumber: '',
     emergencyContact: '',
     departmentId: '',
     designation: ''
@@ -38,14 +38,21 @@ const SignUp = () => {
       return
     }
 
+    // Create user data
     const userData = {
       id: Date.now(),
       ...formData,
       role: userType,
-      touristType: userType === 'tourist' ? touristType : null,  // Save touristType
+      touristType: userType === 'tourist' ? touristType : null,
       isRegistered: false
     }
     
+    // Save to registeredUsers in localStorage
+    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]')
+    registeredUsers.push(userData)
+    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers))
+    
+    // Login the user
     login(userData)
     navigate(`/${userType}/dashboard`)
   }
@@ -61,7 +68,7 @@ const SignUp = () => {
         <div className="text-center mb-8">
           <Shield className="h-16 w-16 text-primary-600 mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900">Create Account</h1>
-          <p className="text-gray-600 mt-2">Join the Tourist Safety System</p>
+          <p className="text-gray-600 mt-2">Join the Tourist Safety Ecosystem</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-xl p-8">
@@ -101,7 +108,7 @@ const SignUp = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Full Name
                 </label>
                 <input
@@ -114,7 +121,7 @@ const SignUp = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Email Address
                 </label>
                 <input
@@ -127,7 +134,7 @@ const SignUp = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Phone Number
                 </label>
                 <input
@@ -142,7 +149,7 @@ const SignUp = () => {
               {userType === 'tourist' && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Country
                     </label>
                     <input
@@ -154,9 +161,9 @@ const SignUp = () => {
                     />
                   </div>
 
-                  {/* New: Domestic/International Selection */}
+                  {/* Domestic/International Selection */}
                   <div className="col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Tourist Type
                     </label>
                     <div className="flex gap-4">
@@ -186,7 +193,7 @@ const SignUp = () => {
                   {/* Conditional ID Field */}
                   {touristType === 'international' ? (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Passport Number
                       </label>
                       <input
@@ -199,7 +206,7 @@ const SignUp = () => {
                     </div>
                   ) : (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Aadhaar Number
                       </label>
                       <input
@@ -216,7 +223,7 @@ const SignUp = () => {
                   )}
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Emergency Contact
                     </label>
                     <input
@@ -233,7 +240,7 @@ const SignUp = () => {
               {userType === 'authority' && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Department ID
                     </label>
                     <input
@@ -246,7 +253,7 @@ const SignUp = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Designation
                     </label>
                     <input
@@ -261,7 +268,7 @@ const SignUp = () => {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Password
                 </label>
                 <input
@@ -274,7 +281,7 @@ const SignUp = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Confirm Password
                 </label>
                 <input
@@ -287,18 +294,20 @@ const SignUp = () => {
               </div>
             </div>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
               className="w-full bg-primary-600 text-white py-3 rounded-lg hover:bg-primary-700 transition-colors font-medium"
             >
               Create {userType === 'tourist' ? 'Tourist' : 'Authority'} Account
-            </button>
+            </motion.button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               Already have an account?{' '}
-              <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium">
+              <Link to="/login" className="text-primary-600 hover:text-primary-700 font-semibold">
                 Login
               </Link>
             </p>

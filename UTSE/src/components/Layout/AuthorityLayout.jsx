@@ -1,17 +1,9 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../Auth/AuthContext'
 import { 
-  Shield, 
-  LayoutDashboard, 
-  Users, 
-  AlertTriangle, 
-  TrendingUp, 
-  FileText, 
-  CreditCard, 
-  Headphones,
-  LogOut,
-  Bell,
-  User
+  Shield, LayoutDashboard, Users, AlertTriangle, 
+  TrendingUp, FileText, CreditCard, Headphones,
+  LogOut, Bell, User
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -37,18 +29,19 @@ const AuthorityLayout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">  {/* Creative gradient background */}
-      {/* Header with animation */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Animated Header */}
       <motion.header 
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50"
+        className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50"
       >
         <div className="px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
+            {/* Animated Logo */}
             <motion.div 
-              whileHover={{ rotate: 360 }}
+              whileHover={{ rotate: 360, scale: 1.1 }}
               transition={{ duration: 0.5 }}
               className="p-2 bg-primary-100 rounded-full shadow-md"
             >
@@ -58,7 +51,7 @@ const AuthorityLayout = () => {
               <h1 className="text-2xl font-bold text-gray-900">
                 Authority Dashboard
               </h1>
-              <p className="text-sm text-gray-500">Tourist Safety Control Center 🚀</p>  {/* Added emoji for creativity */}
+              <p className="text-sm text-gray-500">Tourist Safety Control Center</p>
             </div>
           </div>
           
@@ -66,10 +59,10 @@ const AuthorityLayout = () => {
             <motion.button 
               whileHover={{ scale: 1.1 }}
               className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Notifications"  // Tooltip for user-friendly
+              title="Notifications"
             >
               <Bell className="h-6 w-6" />
-              <span className="absolute top-1 right-1 h-3 w-3 bg-danger-500 rounded-full border-2 border-white animate-pulse"></span>  {/* Added pulse animation */}
+              <span className="absolute top-1 right-1 h-3 w-3 bg-danger-500 rounded-full border-2 border-white animate-pulse"></span>
             </motion.button>
             
             <div className="flex items-center space-x-3 pl-4 border-l border-gray-200">
@@ -88,7 +81,7 @@ const AuthorityLayout = () => {
                 transition={{ duration: 0.3 }}
                 onClick={handleLogout}
                 className="p-2 text-gray-600 hover:text-danger-600 hover:bg-danger-50 rounded-lg transition-colors"
-                title="Logout"  // Tooltip
+                title="Logout"
               >
                 <LogOut className="h-5 w-5" />
               </motion.button>
@@ -98,12 +91,12 @@ const AuthorityLayout = () => {
       </motion.header>
 
       <div className="flex">
-        {/* Sidebar with slide animation */}
+        {/* Animated Sidebar */}
         <motion.aside 
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="w-72 bg-white shadow-xl min-h-[calc(100vh-73px)] sticky top-[73px] overflow-y-auto"  // Added shadow for creativity
+          className="w-72 bg-white shadow-xl min-h-[calc(100vh-73px)] sticky top-[73px] overflow-y-auto"
         >
           <nav className="p-4">
             <ul className="space-y-2">
@@ -113,7 +106,7 @@ const AuthorityLayout = () => {
                 return (
                   <motion.li 
                     key={item.path}
-                    whileHover={{ scale: 1.05, x: 5 }}  // Hover animation
+                    whileHover={{ scale: 1.05, x: 5 }}
                     whileTap={{ scale: 0.95 }}
                     transition={{ duration: 0.2 }}
                   >
@@ -124,7 +117,7 @@ const AuthorityLayout = () => {
                           ? 'bg-primary-600 text-white' 
                           : 'text-gray-700 hover:bg-gray-100'
                       }`}
-                      title={item.label}  // Tooltip
+                      title={item.label}
                     >
                       <Icon className="h-5 w-5" />
                       <span className="font-medium">{item.label}</span>
@@ -136,14 +129,14 @@ const AuthorityLayout = () => {
           </nav>
         </motion.aside>
 
-        {/* Main Content with fade animation */}
+        {/* Animated Main Content */}
         <motion.main 
-          key={location.pathname}  // For page transition
+          key={location.pathname}
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.5 }}
-          className="flex-1 p-6 bg-white/50 rounded-lg m-4 shadow-xl"  // Added creative styling
+          className="flex-1 p-6 bg-white/50 rounded-lg m-4 shadow-xl"
         >
           <Outlet />
         </motion.main>

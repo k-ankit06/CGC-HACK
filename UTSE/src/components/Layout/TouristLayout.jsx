@@ -1,18 +1,8 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../Auth/AuthContext'
 import { 
-  Globe, 
-  LayoutDashboard, 
-  FileText, 
-  Shield, 
-  AlertTriangle, 
-  Map, 
-  CreditCard, 
-  Languages,
-  LogOut,
-  Bell,
-  User,
-  MapPin
+  Globe, LayoutDashboard, FileText, Shield, AlertTriangle, 
+  Map, CreditCard, Languages, LogOut, Bell, User, MapPin
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -38,8 +28,8 @@ const TouristLayout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">  {/* Creative gradient */}
-      {/* Header with animation */}
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+      {/* Animated Header */}
       <motion.header 
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -48,8 +38,9 @@ const TouristLayout = () => {
       >
         <div className="px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
+            {/* Animated Logo */}
             <motion.div 
-              whileHover={{ rotate: 360 }}
+              whileHover={{ rotate: 360, scale: 1.1 }}
               transition={{ duration: 0.5 }}
               className="p-2 bg-white rounded-full shadow-md"
             >
@@ -59,7 +50,7 @@ const TouristLayout = () => {
               <h1 className="text-2xl font-bold text-white">
                 Tourist Safety Portal
               </h1>
-              <p className="text-sm text-primary-100">Your safety companion 🌟</p>  {/* Emoji for creativity */}
+              <p className="text-sm text-primary-100">Your safety companion</p>
             </div>
           </div>
           
@@ -70,7 +61,7 @@ const TouristLayout = () => {
               title="Notifications"
             >
               <Bell className="h-6 w-6" />
-              <span className="absolute top-1 right-1 h-3 w-3 bg-danger-500 rounded-full border-2 border-primary-600 animate-pulse"></span>  {/* Ping animation */}
+              <span className="absolute top-1 right-1 h-3 w-3 bg-danger-500 rounded-full border-2 border-primary-600 animate-ping"></span>
             </motion.button>
             
             <div className="flex items-center space-x-3 pl-4 border-l border-primary-400">
@@ -99,7 +90,7 @@ const TouristLayout = () => {
       </motion.header>
 
       <div className="flex">
-        {/* Sidebar with slide animation */}
+        {/* Animated Sidebar */}
         <motion.aside 
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -137,7 +128,7 @@ const TouristLayout = () => {
           </nav>
         </motion.aside>
 
-        {/* Main Content with fade and slide animation */}
+        {/* Animated Main Content */}
         <motion.main 
           key={location.pathname}
           initial={{ opacity: 0, x: 20 }}

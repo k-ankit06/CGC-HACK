@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Shield, User, Lock, Globe, AlertCircle } from 'lucide-react'
 import { useAuth } from './AuthContext'
+import { motion } from 'framer-motion'
 
 const Login = () => {
   const [userType, setUserType] = useState('tourist')
@@ -17,31 +18,40 @@ const Login = () => {
     e.preventDefault()
     setError('')
 
-    // Mock authentication - Replace with actual API call
-    if (formData.email && formData.password) {
-      const userData = {
-        id: Date.now(),
-        email: formData.email,
-        role: userType,
-        name: userType === 'authority' ? 'Admin Officer' : 'Tourist User',
-        isRegistered: userType === 'tourist' ? false : true
-      }
-      login(userData)
+    // Get registered users from localStorage
+    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]')
+    
+    // Validate user: Match email, password, and userType
+    const validUser = registeredUsers.find(
+      user => user.email === formData.email &&
+              user.password === formData.password &&
+              user.role === userType
+    )
+
+    if (validUser) {
+      login(validUser)
       navigate(`/${userType}/dashboard`)
     } else {
-      setError('Please enter valid credentials')
+      setError(
+        '❌ Invalid credentials! OR You are not signed up yet. Please sign up first.'
+      )
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 flex items-center justify-center p-4">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 flex items-center justify-center p-4"
+    >
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <div className="inline-block p-4 bg-white rounded-full mb-4">
             <Shield className="h-16 w-16 text-primary-600" />
           </div>
           <h1 className="text-4xl font-bold text-white mb-2">Tourist Safety System</h1>
-          <p className="text-primary-100">Protecting tourists, ensuring safety</p>
+          <p className="text-primary-100">Secure login to continue</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-2xl p-8">
@@ -52,10 +62,10 @@ const Login = () => {
               className={`flex-1 py-3 px-4 rounded-lg transition-all font-medium ${
                 userType === 'tourist' 
                   ? 'bg-white shadow-md text-primary-600' 
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-gray-600'
               }`}
             >
-              <Globe className="inline h-5 w-5 mr-2" />
+              <Globe className="inline h-4 w-4 mr-2" />
               Tourist
             </button>
             <button
@@ -63,10 +73,10 @@ const Login = () => {
               className={`flex-1 py-3 px-4 rounded-lg transition-all font-medium ${
                 userType === 'authority' 
                   ? 'bg-white shadow-md text-primary-600' 
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-gray-600'
               }`}
             >
-              <Shield className="inline h-5 w-5 mr-2" />
+              <Shield className="inline h-4 w-4 mr-2" />
               Authority
             </button>
           </div>
@@ -88,7 +98,7 @@ const Login = () => {
                 <input
                   type="email"
                   required
-                  className="input-field pl-10"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -105,7 +115,7 @@ const Login = () => {
                 <input
                   type="password"
                   required
-                  className="input-field pl-10"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
@@ -113,12 +123,14 @@ const Login = () => {
               </div>
             </div>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
               className="w-full bg-primary-600 text-white py-3 rounded-lg hover:bg-primary-700 transition-colors font-semibold text-lg shadow-lg hover:shadow-xl"
             >
               Login as {userType === 'tourist' ? 'Tourist' : 'Authority'}
-            </button>
+            </motion.button>
           </form>
 
           <div className="mt-6 text-center">
@@ -131,7 +143,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
