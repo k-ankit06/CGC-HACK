@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Shield, Globe, AlertCircle, CheckCircle } from 'lucide-react'
+import { Shield, Globe, AlertCircle } from 'lucide-react'
 import { useAuth } from './AuthContext'
 import { motion } from 'framer-motion'  // For animations
 

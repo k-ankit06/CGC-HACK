@@ -1,5 +1,5 @@
-import { Users, AlertTriangle, Shield, Clock, TrendingUp, TrendingDown, Activity } from 'lucide-react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
+import { Users, AlertTriangle, Shield, Clock, TrendingUp, TrendingDown } from 'lucide-react'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { motion } from 'framer-motion'
 
 const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary' }) => {
@@ -43,29 +43,12 @@ const AuthorityDashboard = () => {
     { month: 'May', incidents: 28, resolved: 28 },
     { month: 'Jun', incidents: 22, resolved: 22 },
   ]
-
-  const touristDistribution = [
-    { name: 'Delhi', value: 450 },
-    { name: 'Goa', value: 320 },
-    { name: 'Rajasthan', value: 280 },
-    { name: 'Kerala', value: 250 },
-    { name: 'Others', value: 200 },
-  ]
-
-  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
-
+  
   const recentIncidents = [
     { id: 1, type: 'Medical Emergency', location: 'Taj Mahal', time: '10 mins ago', status: 'Resolved', tourist: 'John Doe', severity: 'High' },
     { id: 2, type: 'Lost Tourist', location: 'Red Fort', time: '25 mins ago', status: 'In Progress', tourist: 'Sarah Smith', severity: 'Medium' },
     { id: 3, type: 'Theft Report', location: 'Gateway of India', time: '1 hour ago', status: 'Investigating', tourist: 'Mike Johnson', severity: 'High' },
     { id: 4, type: 'Language Barrier', location: 'Hawa Mahal', time: '2 hours ago', status: 'Resolved', tourist: 'Emma Wilson', severity: 'Low' },
-  ]
-
-  const activeTourists = [
-    { id: 1, name: 'Alice Brown', country: 'USA', location: 'India Gate, Delhi', safetyScore: 95, status: 'safe' },
-    { id: 2, name: 'David Lee', country: 'UK', location: 'Taj Mahal, Agra', safetyScore: 88, status: 'safe' },
-    { id: 3, name: 'Maria Garcia', country: 'Spain', location: 'Goa Beach', safetyScore: 72, status: 'warning' },
-    { id: 4, name: 'Tom Harris', country: 'Australia', location: 'Jaipur Fort', safetyScore: 92, status: 'safe' },
   ]
 
   return (
@@ -153,8 +136,6 @@ const AuthorityDashboard = () => {
           </div>
         </div>
       </motion.div>
-      
-      {/* ... rest of the dashboard code with similar motion additions ... */}
     </motion.div>
   )
 }

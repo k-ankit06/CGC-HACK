@@ -1,24 +1,35 @@
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
-import { useAuth } from '../Auth/AuthContext'
+import { useState, useRef, useEffect } from 'react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../Auth/AuthContext';
 import { 
-  Shield, 
-  LayoutDashboard, 
-  Users, 
-  AlertTriangle, 
-  TrendingUp, 
-  FileText, 
-  CreditCard, 
-  Headphones,
-  LogOut,
-  Bell,
-  User
-} from 'lucide-react'
-import { motion } from 'framer-motion'
+  Shield, LayoutDashboard, Users, AlertTriangle, TrendingUp, FileText, CreditCard, Headphones,
+  LogOut, Bell, User, Edit 
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const AuthorityLayout = () => {
-  const { user, logout } = useAuth()
-  const location = useLocation()
-  const navigate = useNavigate()
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   const menuItems = [
     { path: '/authority/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -29,16 +40,10 @@ const AuthorityLayout = () => {
     { path: '/authority/smart-id', icon: CreditCard, label: 'Smart ID System' },
     { path: '/authority/response-team', icon: Headphones, label: 'Response Team' },
     { path: '/authority/analytics', icon: TrendingUp, label: 'Analytics' },
-  ]
-
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">  {/* Creative gradient background */}
-      {/* Header with animation */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <motion.header 
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -47,109 +52,104 @@ const AuthorityLayout = () => {
       >
         <div className="px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <motion.div 
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-              className="p-2 bg-primary-100 rounded-full shadow-md"
-            >
+             <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }} className="p-2 bg-primary-100 rounded-full shadow-md">
               <Shield className="h-8 w-8 text-primary-600" />
             </motion.div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Authority Dashboard
-              </h1>
-              <p className="text-sm text-gray-500">Tourist Safety Control Center 🚀</p>  {/* Added emoji for creativity */}
+              <h1 className="text-2xl font-bold text-gray-900">Authority Dashboard</h1>
+              <p className="text-sm text-gray-500">Tourist Safety Control Center 🚀</p>
             </div>
           </div>
-          
           <div className="flex items-center space-x-4">
             <motion.button 
               whileHover={{ scale: 1.1 }}
-              className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Notifications"  // Tooltip for user-friendly
+              className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
+              title="Notifications"
             >
               <Bell className="h-6 w-6" />
-              <span className="absolute top-1 right-1 h-3 w-3 bg-danger-500 rounded-full border-2 border-white animate-pulse"></span>  {/* Added pulse animation */}
+              <span className="absolute top-1 right-1 h-3 w-3 bg-danger-500 rounded-full border-2 border-white animate-pulse"></span>
             </motion.button>
-            
-            <div className="flex items-center space-x-3 pl-4 border-l border-gray-200">
-              <div className="text-right">
-                <p className="text-sm font-semibold text-gray-900">{user?.name}</p>
-                <p className="text-xs text-gray-500">{user?.designation || 'Authority'}</p>
-              </div>
-              <motion.div 
-                whileHover={{ scale: 1.1 }}
-                className="h-10 w-10 bg-primary-100 rounded-full flex items-center justify-center shadow-md"
+            <div className="relative pl-4 border-l border-gray-200" ref={dropdownRef}>
+              <button 
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)} 
+                className="flex items-center space-x-3"
               >
-                <User className="h-6 w-6 text-primary-600" />
-              </motion.div>
-              <motion.button 
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                transition={{ duration: 0.3 }}
-                onClick={handleLogout}
-                className="p-2 text-gray-600 hover:text-danger-600 hover:bg-danger-50 rounded-lg transition-colors"
-                title="Logout"  // Tooltip
-              >
-                <LogOut className="h-5 w-5" />
-              </motion.button>
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-gray-900">{user?.name}</p>
+                  <p className="text-xs text-gray-500">{user?.designation || 'Authority'}</p>
+                </div>
+                <motion.div 
+                  whileHover={{ scale: 1.1 }}
+                  className="h-10 w-10 bg-primary-100 rounded-full flex items-center justify-center shadow-md"
+                >
+                  <User className="h-6 w-6 text-primary-600" />
+                </motion.div>
+              </button>
+              <AnimatePresence>
+                {isDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
+                  >
+                    <Link to="/authority/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Profile
+                    </Link>
+                    <button 
+                      onClick={handleLogout} 
+                      className="w-full text-left flex items-center px-4 py-2 text-sm text-danger-600 hover:bg-danger-50"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Logout
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
       </motion.header>
 
       <div className="flex">
-        {/* Sidebar with slide animation */}
         <motion.aside 
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="w-72 bg-white shadow-xl min-h-[calc(100vh-73px)] sticky top-[73px] overflow-y-auto"  // Added shadow for creativity
+          className="w-72 bg-white shadow-xl min-h-[calc(100vh-73px)] sticky top-[73px] overflow-y-auto"
         >
           <nav className="p-4">
             <ul className="space-y-2">
               {menuItems.map((item) => {
-                const Icon = item.icon
-                const isActive = location.pathname === item.path
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
                 return (
-                  <motion.li 
-                    key={item.path}
-                    whileHover={{ scale: 1.05, x: 5 }}  // Hover animation
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Link
-                      to={item.path}
-                      className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all shadow-md hover:shadow-lg ${
-                        isActive 
-                          ? 'bg-primary-600 text-white' 
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                      title={item.label}  // Tooltip
-                    >
+                  <motion.li key={item.path} whileHover={{ scale: 1.05, x: 5 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }}>
+                    <Link to={item.path} className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all shadow-md hover:shadow-lg ${isActive ? 'bg-primary-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`} title={item.label}>
                       <Icon className="h-5 w-5" />
                       <span className="font-medium">{item.label}</span>
                     </Link>
                   </motion.li>
-                )
+                );
               })}
             </ul>
           </nav>
         </motion.aside>
 
-        {/* Main Content with fade animation */}
         <motion.main 
-          key={location.pathname}  // For page transition
+          key={location.pathname}
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.5 }}
-          className="flex-1 p-6 bg-white/50 rounded-lg m-4 shadow-xl"  // Added creative styling
+          className="flex-1 p-6"
         >
           <Outlet />
         </motion.main>
       </div>
     </div>
-  )
+  );
 }
 
-export default AuthorityLayout
+export default AuthorityLayout;
