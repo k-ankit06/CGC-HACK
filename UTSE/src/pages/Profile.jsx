@@ -8,16 +8,16 @@ const Profile = () => {
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
   
-  // NAYA CHANGE: User ke role ke hisaab se form ki initial state set karein
+  
   const isAuthority = user?.role === 'authority';
 
   const [formData, setFormData] = useState({
     name: user?.name || '',
     phone: user?.phone || '',
-    // Sirf tourist ke liye emergency contact fields
+    
     emergencyContactName: isAuthority ? '' : (user?.emergencyContactName || ''),
     emergencyContactPhone: isAuthority ? '' : (user?.emergencyContactPhone || ''),
-    // Sirf authority ke liye designation field
+   
     designation: isAuthority ? (user?.designation || '') : '',
   });
 
@@ -30,13 +30,13 @@ const Profile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Yahaan data update hoga jo context mein save hoga
+   
     updateUser(formData);
 
     setMessage('Profile updated successfully!');
     setTimeout(() => {
         setMessage('');
-        // User ko uske sahi dashboard par wapas bhej do
+        
         navigate(`/${user.role}/dashboard`);
     }, 2000);
   };
@@ -77,7 +77,7 @@ const Profile = () => {
                 <input type="email" name="email" className="input-field bg-gray-100 cursor-not-allowed" value={user?.email || ''} readOnly />
               </div>
               
-              {/* NAYA CHANGE: Sirf Authority ko Designation field dikhega */}
+              
               {isAuthority && (
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Designation</label>
@@ -87,7 +87,7 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* NAYA CHANGE: Sirf Tourist ko Emergency Contact card dikhega */}
+          
           {!isAuthority && (
             <div className="card">
               <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
