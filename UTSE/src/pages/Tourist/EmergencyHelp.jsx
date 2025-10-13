@@ -98,7 +98,7 @@ const EmergencyHelp = () => {
 
   const handlePanic = () => {
     setPanicActivated(true)
-    // Simulate emergency alert
+    
     setTimeout(() => {
       setPanicActivated(false)
     }, 5000)
@@ -121,7 +121,7 @@ const EmergencyHelp = () => {
         <p className="text-gray-600 mt-1">Immediate assistance and emergency contacts at your fingertips</p>
       </div>
 
-      {/* SOS Panic Button */}
+      
       <div className="card bg-gradient-to-r from-danger-500 to-danger-600 text-white">
         <div className="flex items-center justify-between">
           <div className="flex-1">
@@ -163,7 +163,7 @@ const EmergencyHelp = () => {
         )}
       </div>
 
-      {/* Quick Emergency Contacts */}
+  
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {emergencyContacts.map((contact) => {
           const Icon = contact.icon
@@ -191,7 +191,7 @@ const EmergencyHelp = () => {
         })}
       </div>
 
-      {/* Nearby Emergency Services */}
+    
       <div className="card">
         <h3 className="text-xl font-bold mb-4 flex items-center">
           <MapPin className="h-6 w-6 mr-2 text-primary-600" />
@@ -242,7 +242,7 @@ const EmergencyHelp = () => {
         </div>
       </div>
 
-      {/* Embassy Contacts */}
+  
       <div className="card">
         <h3 className="text-xl font-bold mb-4">Embassy/Consulate Contacts</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -264,7 +264,7 @@ const EmergencyHelp = () => {
         </div>
       </div>
 
-      {/* Safety Checklist */}
+
       <div className="card bg-warning-50 border-2 border-warning-300">
         <h3 className="text-xl font-bold text-warning-900 mb-4">⚠️ Emergency Preparedness Checklist</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -286,7 +286,7 @@ const EmergencyHelp = () => {
         </div>
       </div>
 
-      {/* Emergency Detail Modal */}
+    
       {selectedEmergency && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-lg w-full">

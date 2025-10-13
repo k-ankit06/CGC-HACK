@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Check for user in localStorage on initial load
+    
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
       setUser(JSON.parse(storedUser))
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null)
     localStorage.removeItem('user')
-    localStorage.removeItem('touristData') // Also clearing tourist specific data if any
+    localStorage.removeItem('touristData') 
   }
 
   const updateUser = (updatedData) => {

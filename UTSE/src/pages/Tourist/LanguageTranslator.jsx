@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Languages, Volume2, Copy, Star, BookOpen, MessageCircle, Loader } from 'lucide-react'
 import { motion } from 'framer-motion'
-import axios from 'axios'  // For API calls
+import axios from 'axios'  
 
 const LanguageTranslator = () => {
   const [inputText, setInputText] = useState('')
@@ -99,7 +99,7 @@ const LanguageTranslator = () => {
     setTranslatedText('')
 
     try {
-      console.log('Translating:', { text: inputText, from: fromLang, to: toLang })  // Debugging
+      console.log('Translating:', { text: inputText, from: fromLang, to: toLang })  
 
       const response = await axios.get('https://api.mymemory.translated.net/get', {
         params: {
@@ -149,7 +149,7 @@ const LanguageTranslator = () => {
         <p className="text-gray-600 mt-1">Multi-language support for seamless communication 🌍</p>
       </div>
 
-      {/* Instant Translator Section */}
+      
       <div className="card">
         <h3 className="text-xl font-bold mb-4 flex items-center">
           <Languages className="h-6 w-6 mr-2 text-primary-600" />
@@ -254,7 +254,7 @@ const LanguageTranslator = () => {
         </motion.button>
       </div>
 
-      {/* Common Phrases Section (Kept and Rendered) */}
+    
       <div className="space-y-4">
         <h3 className="text-xl font-bold flex items-center">
           <BookOpen className="h-6 w-6 mr-2 text-primary-600" />
@@ -311,7 +311,7 @@ const LanguageTranslator = () => {
         ))}
       </div>
 
-      {/* Numbers Guide */}
+
       <div className="card">
         <h4 className="text-lg font-bold mb-4">🔢 Numbers (1-10)</h4>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -335,7 +335,7 @@ const LanguageTranslator = () => {
         </div>
       </div>
 
-      {/* Emergency Phrases Card */}
+    
       <div className="card bg-danger-50 border-2 border-danger-300">
         <h4 className="text-lg font-bold text-danger-900 mb-4 flex items-center">
           🚨 Emergency Phrases - Keep Handy!
@@ -367,7 +367,7 @@ const LanguageTranslator = () => {
         </div>
       </div>
 
-      {/* Language Learning Tips */}
+
       <div className="card bg-primary-50 border-2 border-primary-300">
         <h4 className="text-lg font-bold text-primary-900 mb-3">💡 Language Tips for Tourists</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-primary-800">
@@ -387,7 +387,7 @@ const LanguageTranslator = () => {
         </div>
       </div>
 
-      {/* Voice Assistant Feature */}
+    
       <div className="card bg-gradient-to-r from-purple-600 to-purple-700 text-white">
         <div className="flex items-center justify-between">
           <div className="flex-1">

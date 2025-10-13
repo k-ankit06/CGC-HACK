@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../components/Auth/AuthContext';
 
 const MyTouristCard = () => {
-  const { user } = useAuth(); // Use AuthContext to get the latest user data
+  const { user } = useAuth(); 
   const touristData = JSON.parse(localStorage.getItem('touristData') || '{}');
   
-  // Use data from AuthContext first, fallback to localStorage
+  
   const displayData = user?.isRegistered ? user : touristData;
 
   if (!displayData.touristId) {
@@ -32,7 +32,7 @@ const MyTouristCard = () => {
   const isGroupRegistration = displayData.group && displayData.group.length > 0;
   const verificationUrl = `${window.location.origin}/verify/${displayData.touristId}`;
 
-  const downloadQR = () => { /* Download QR logic remains the same */ };
+  const downloadQR = () => {};
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">

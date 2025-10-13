@@ -4,7 +4,7 @@ import ProtectedRoute from './components/Auth/ProtectedRoute'
 import Login from './components/Auth/Login'
 import SignUp from './components/Auth/SignUp'
 import SplashScreen from './components/Layout/SplashScreen'
-// Authority Pages
+
 import AuthorityLayout from './components/Layout/AuthorityLayout'
 import AuthorityDashboard from './pages/Authority/Dashboard'
 import TouristMonitoring from './pages/Authority/TouristMonitoring'
@@ -15,7 +15,6 @@ import SmartIDSystem from './pages/Authority/SmartIDSystem'
 import ResponseTeam from './pages/Authority/ResponseTeam'
 import AuthorityAnalytics from './pages/Authority/Analytics'
 
-// Tourist Pages
 import TouristLayout from './components/Layout/TouristLayout'
 import TouristDashboard from './pages/Tourist/Dashboard'
 import TouristRegistration from './pages/Tourist/Registration'
@@ -25,9 +24,9 @@ import TravelGuide from './pages/Tourist/TravelGuide'
 import MyTouristCard from './pages/Tourist/MyTouristCard'
 import SafeRoutes from './pages/Tourist/SafeRoutes'
 import LanguageTranslator from './pages/Tourist/LanguageTranslator'
-import { AnimatePresence } from 'framer-motion'  // For page transitions
+import { AnimatePresence } from 'framer-motion'  
 
-// --- NAYA CHANGE 1: Naye Profile page ko yahaan import karein ---
+
 import Profile from './pages/Profile'
 
 function App() {
@@ -37,11 +36,11 @@ function App() {
         <AnimatePresence mode="wait">
           <Routes>
             <Route path="/" element={<SplashScreen />} />
-            {/* Public Routes */}
+        
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             
-            {/* Authority Routes */}
+          
             <Route path="/authority" element={
               <ProtectedRoute requiredRole="authority">
                 <AuthorityLayout />
@@ -56,11 +55,11 @@ function App() {
               <Route path="smart-id" element={<SmartIDSystem />} />
               <Route path="response-team" element={<ResponseTeam />} />
               
-              {/* --- NAYA CHANGE 2: Authority ke liye Profile route yahaan add karein --- */}
+      
               <Route path="profile" element={<Profile />} />
             </Route>
 
-            {/* Tourist Routes */}
+            
             <Route path="/tourist" element={
               <ProtectedRoute requiredRole="tourist">
                 <TouristLayout />
@@ -75,11 +74,11 @@ function App() {
               <Route path="safe-routes" element={<SafeRoutes />} />
               <Route path="translator" element={<LanguageTranslator />} />
 
-              {/* --- NAYA CHANGE 3: Tourist ke liye Profile route yahaan add karein --- */}
+              
               <Route path="profile" element={<Profile />} />
             </Route>
 
-            {/* Default Route */}
+      
             <Route path="/" element={<Navigate to="/login" />} />
           </Routes>
         </AnimatePresence>

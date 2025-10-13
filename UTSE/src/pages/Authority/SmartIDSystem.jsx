@@ -5,12 +5,12 @@ import QRCode from 'qrcode.react';
 const SmartIDSystem = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCard, setSelectedCard] = useState(null);
-  const [touristCards, setTouristCards] = useState([]); // NAYA CHANGE: State mein data store hoga
+  const [touristCards, setTouristCards] = useState([]);
 
-  // NAYA CHANGE: useEffect se localStorage se real data fetch karein
+
   useEffect(() => {
     const allTourists = JSON.parse(localStorage.getItem('allTourists') || '[]');
-    // Is data ko thoda sa process karke state mein set karein
+    
     setTouristCards(allTourists.map(tourist => ({
         id: tourist.touristId,
         name: tourist.fullName,
@@ -25,15 +25,15 @@ const SmartIDSystem = () => {
         hotel: tourist.hotelName,
         checkIn: tourist.checkInDate,
         checkOut: tourist.checkOutDate,
-        status: 'Active', // Demo status
-        photo: '👤', // Demo photo
-        verified: true // Maan lete hain ki sabhi registered users verified hain
+        status: 'Active', 
+        photo: '👤', 
+        verified: true 
     })));
   }, []);
 
   const filteredCards = touristCards.filter(card => {
     const searchLower = searchTerm.toLowerCase();
-    // Search logic ko behtar banayein
+    
     const nameMatch = card.name && card.name.toLowerCase().includes(searchLower);
     const idMatch = card.id && card.id.toLowerCase().includes(searchLower);
     const passportMatch = card.passport && card.passport.toLowerCase().includes(searchLower);

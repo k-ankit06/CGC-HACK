@@ -121,7 +121,7 @@ const SafetyInfo = () => {
         <p className="text-gray-600 mt-1">Essential tips and guidelines for a safe journey in India</p>
       </div>
 
-      {/* Emergency Numbers Card */}
+  
       <div className="card bg-gradient-to-r from-danger-500 to-danger-600 text-white">
         <h3 className="text-2xl font-bold mb-4 flex items-center">
           <Phone className="h-6 w-6 mr-2" />
@@ -143,7 +143,7 @@ const SafetyInfo = () => {
         </div>
       </div>
 
-      {/* Safety Tips by Category */}
+      
       {safetyTips.map((category, index) => {
         const Icon = category.icon
         return (
@@ -166,7 +166,7 @@ const SafetyInfo = () => {
         )
       })}
 
-      {/* Do's and Don'ts */}
+    
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="card border-2 border-success-300">
           <h3 className="text-xl font-bold text-success-700 mb-4 flex items-center">
@@ -197,7 +197,7 @@ const SafetyInfo = () => {
         </div>
       </div>
 
-      {/* Weather Safety Alert */}
+    
       <div className="card bg-gradient-to-r from-warning-500 to-warning-600 text-white">
         <h3 className="text-xl font-bold mb-4 flex items-center">
           <Sun className="h-6 w-6 mr-2" />
@@ -231,7 +231,7 @@ const SafetyInfo = () => {
         </div>
       </div>
 
-      {/* Important Documents Checklist */}
+      
       <div className="card">
         <h3 className="text-xl font-bold mb-4">Essential Documents Checklist</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -255,7 +255,7 @@ const SafetyInfo = () => {
         </div>
       </div>
 
-      {/* Quick Tips Banner */}
+      
       <div className="card bg-primary-50 border-2 border-primary-300">
         <h4 className="font-bold text-primary-900 mb-3">💡 Quick Safety Tips</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-primary-800">

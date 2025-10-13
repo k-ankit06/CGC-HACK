@@ -9,7 +9,7 @@ const SafeRoutes = () => {
   const [fromLocation, setFromLocation] = useState('');
   const [toLocation, setToLocation] = useState('');
 
-  // ORIGINAL DATA (WITH NEW DYNAMIC FIELDS)
+  
   const popularRoutes = [
     {
       id: 1, from: 'Hotel Oberoi Amarvilas', to: 'Taj Mahal', distance: '1.2 km', duration: '5 mins', safetyScore: 98, crowdLevel: 'Medium',
@@ -69,7 +69,7 @@ const SafeRoutes = () => {
     }
     setIsLoading(true);
     setSearchedRoute(null);
-    setSelectedRoute(null); // Clear selected popular route
+    setSelectedRoute(null); 
     setTimeout(() => {
       const randomRoute = popularRoutes[Math.floor(Math.random() * popularRoutes.length)];
       setSearchedRoute({ ...randomRoute, from: fromLocation, to: toLocation, id: Date.now() });

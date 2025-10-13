@@ -34,7 +34,6 @@ const AuthorityAnalytics = () => {
         <p className="text-gray-600 mt-1">Comprehensive data analysis and performance metrics</p>
       </div>
 
-      {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="card bg-gradient-to-br from-primary-500 to-primary-600 text-white">
           <div className="flex items-center justify-between">
@@ -78,7 +77,6 @@ const AuthorityAnalytics = () => {
         </div>
       </div>
 
-      {/* Charts Row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card">
           <h3 className="text-xl font-bold mb-4">Tourist & Incident Trends</h3>
@@ -120,7 +118,6 @@ const AuthorityAnalytics = () => {
         </div>
       </div>
 
-      {/* Charts Row 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card">
           <h3 className="text-xl font-bold mb-4">Location-wise Analysis</h3>
@@ -153,7 +150,6 @@ const AuthorityAnalytics = () => {
         </div>
       </div>
 
-      {/* Performance Summary */}
       <div className="card">
         <h3 className="text-xl font-bold mb-4">Performance Summary</h3>
         <div className="overflow-x-auto">

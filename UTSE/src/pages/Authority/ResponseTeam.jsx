@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Users, Phone, MapPin, CheckCircle, Clock } from 'lucide-react';
 
-// Initial "fake" data (jo real app mein database se aayega)
+
 const initialTeamsData = [
   { id: 1, name: 'Medical Team Alpha', type: 'Medical', members: 4, status: 'Available', location: 'Taj Mahal Station', currentAssignment: null, responseTime: '2:30', completedToday: 8, contact: '+91 98765 43210' },
   { id: 2, name: 'Police Unit Bravo', type: 'Police', members: 6, status: 'On Duty', location: 'Red Fort Area', currentAssignment: 'INC-2024-023', responseTime: '3:45', completedToday: 12, contact: '+91 98765 43211' },
@@ -11,16 +11,16 @@ const initialTeamsData = [
 ];
 
 const ResponseTeam = () => {
-  // NAYA CHANGE: Data ko state mein daalo taaki hum use update kar sakein
+  
   const [teams, setTeams] = useState(initialTeamsData);
 
-  // NAYA FUNCTION: Team ko incident assign karne ke liye
+  
   const handleAssignTask = (teamId) => {
     const incidentId = prompt("Please enter the Incident ID to assign:", `INC-${Date.now().toString().slice(-5)}`);
     if (incidentId) {
       setTeams(teams.map(team => {
         if (team.id === teamId) {
-          // Team ka status aur assignment update karo
+          
           return { ...team, status: 'On Duty', currentAssignment: incidentId };
         }
         return team;
@@ -28,12 +28,12 @@ const ResponseTeam = () => {
     }
   };
 
-  // NAYA FUNCTION: Task ko complete mark karne ke liye
+  
   const handleCompleteTask = (teamId) => {
     if (window.confirm("Are you sure you want to mark this task as complete?")) {
         setTeams(teams.map(team => {
             if (team.id === teamId) {
-                // Team ka status 'Available' karo aur assignment hata do
+                
                 return { ...team, status: 'Available', currentAssignment: null, completedToday: team.completedToday + 1 };
             }
             return team;
@@ -42,8 +42,8 @@ const ResponseTeam = () => {
   };
 
 
-  const getStatusColor = (status) => { /* ... yeh function pehle jaisa hi rahega ... */ };
-  const getTypeColor = (type) => { /* ... yeh function pehle jaisa hi rahega ... */ };
+  const getStatusColor = (status) => {};
+  const getTypeColor = (type) => {};
 
   return (
     <div className="space-y-6">
@@ -81,7 +81,7 @@ const ResponseTeam = () => {
               <div className="bg-warning-50 border-l-4 border-warning-500 p-3 rounded mb-4">
                 <p className="text-sm font-semibold text-warning-900">Current Assignment:</p>
                 <p className="text-sm text-warning-700 font-mono">{team.currentAssignment}</p>
-                {/* NAYA CHANGE: Task complete karne ka button */}
+                {}
                 <button onClick={() => handleCompleteTask(team.id)} className="text-xs font-semibold text-green-600 hover:underline mt-2">Mark as Complete</button>
               </div>
             ) : (
@@ -93,7 +93,7 @@ const ResponseTeam = () => {
             <div className="flex gap-2">
               <button className="flex-1 btn-primary"><Phone className="inline h-4 w-4 mr-1" />Contact</button>
               <button className="flex-1 bg-purple-600 text-white px-4 py-2 rounded-lg font-medium"><MapPin className="inline h-4 w-4 mr-1" />Track</button>
-              {/* NAYA CHANGE: "Assign" button ko functional banaya gaya hai */}
+              {}
               <button 
                 onClick={() => handleAssignTask(team.id)} 
                 disabled={team.status !== 'Available'}

@@ -50,7 +50,6 @@ const TouristLayout = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
-      {/* Header Section */}
       <motion.header 
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -122,9 +121,7 @@ const TouristLayout = () => {
         </div>
       </motion.header>
 
-      {/* YEH HISSA AAPNE MISS KAR DIYA THA */}
       <div className="flex">
-        {/* Sidebar Section */}
         <motion.aside 
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -162,7 +159,6 @@ const TouristLayout = () => {
           </nav>
         </motion.aside>
 
-        {/* Main Content Section */}
         <motion.main 
           key={location.pathname}
           initial={{ opacity: 0, x: 20 }}

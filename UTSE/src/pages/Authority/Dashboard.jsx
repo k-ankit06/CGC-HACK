@@ -63,7 +63,6 @@ const AuthorityDashboard = () => {
         <p className="text-gray-600 mt-1">Real-time tourist safety monitoring and analytics 📊</p>
       </div>
       
-      {/* Stats Cards with hover animation */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatsCard 
           title="Active Tourists" 
@@ -95,7 +94,6 @@ const AuthorityDashboard = () => {
         />
       </div>
       
-      {/* Charts Section with fade in */}
       <motion.div 
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}

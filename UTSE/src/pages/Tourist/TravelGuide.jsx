@@ -141,8 +141,6 @@ const TravelGuide = () => {
         <h2 className="text-3xl font-bold text-gray-900">Travel Guide</h2>
         <p className="text-gray-600 mt-1">Explore India's rich culture, cuisine, and heritage</p>
       </div>
-
-      {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="card bg-gradient-to-br from-primary-500 to-primary-600 text-white text-center">
           <MapPin className="h-8 w-8 mx-auto mb-2" />
@@ -166,7 +164,7 @@ const TravelGuide = () => {
         </div>
       </div>
 
-      {/* Top Tourist Spots */}
+      
       <div className="card">
         <h3 className="text-xl font-bold mb-4 flex items-center">
           <MapPin className="h-6 w-6 mr-2 text-primary-600" />
@@ -252,7 +250,7 @@ const TravelGuide = () => {
         </div>
       </div>
 
-      {/* Local Cuisine */}
+    
       <div className="card">
         <h3 className="text-xl font-bold mb-4 flex items-center">
           <Utensils className="h-6 w-6 mr-2 text-primary-600" />
@@ -287,7 +285,7 @@ const TravelGuide = () => {
         </div>
       </div>
 
-      {/* Cultural Etiquette */}
+      
       <div className="card bg-purple-50 border-2 border-purple-300">
         <h3 className="text-xl font-bold mb-4 text-purple-900">🙏 Cultural Etiquette & Tips</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -300,7 +298,7 @@ const TravelGuide = () => {
         </div>
       </div>
 
-      {/* General Travel Tips */}
+    
       <div className="card">
         <h3 className="text-xl font-bold mb-4">✈️ Essential Travel Tips</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -313,7 +311,7 @@ const TravelGuide = () => {
         </div>
       </div>
 
-      {/* Weather Guide */}
+  
       <div className="card bg-gradient-to-r from-warning-500 to-warning-600 text-white">
         <h3 className="text-xl font-bold mb-4">🌤️ Best Time to Visit India</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

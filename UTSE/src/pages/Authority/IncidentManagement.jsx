@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { FileText, Plus, Search, Download, Eye, Edit, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Initial "fake" data (jo real app mein database se aayega)
 const initialIncidentsData = [
   { id: 'INC-2024-001', type: 'Medical Emergency', tourist: 'John Anderson', location: 'Taj Mahal, Agra', date: '2024-01-20', time: '14:30', severity: 'Critical', status: 'Resolved', description: 'Tourist collapsed due to heat exhaustion', responseTeam: 'Medical Team Alpha', officer: 'Officer Sharma' },
   { id: 'INC-2024-002', type: 'Theft', tourist: 'Sarah Williams', location: 'India Gate, Delhi', date: '2024-01-21', time: '16:45', severity: 'High', status: 'Investigating', description: 'Wallet and phone stolen', responseTeam: 'Police Unit Bravo', officer: 'Officer Kumar' },
@@ -10,7 +9,7 @@ const initialIncidentsData = [
 ];
 
 const IncidentManagement = () => {
-  const [incidents, setIncidents] = useState(initialIncidentsData); // Data in state
+  const [incidents, setIncidents] = useState(initialIncidentsData); 
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedIncident, setSelectedIncident] = useState(null);
@@ -21,7 +20,7 @@ const IncidentManagement = () => {
     const newIncident = {
       id: `INC-${Date.now().toString().slice(-5)}`,
       ...formData,
-      status: 'In Progress' // Default status
+      status: 'In Progress' 
     };
     setIncidents([newIncident, ...incidents]);
     setShowModal(false);
@@ -45,8 +44,8 @@ const IncidentManagement = () => {
     setShowModal(true);
   };
   
-  const getStatusColor = (status) => { /* ... Function remains the same ... */ };
-  const getSeverityColor = (severity) => { /* ... Function remains the same ... */ };
+  const getStatusColor = (status) => {};
+  const getSeverityColor = (severity) => {};
 
   const filteredIncidents = incidents.filter(incident => {
     const matchesSearch = incident.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -74,12 +73,12 @@ const IncidentManagement = () => {
         <div className="card bg-gradient-to-br from-warning-500 to-warning-600 text-white"><p>In Progress</p><p className="text-4xl font-bold mt-1">{incidents.filter(i => i.status !== 'Resolved').length}</p></div>
       </div>
 
-      <div className="card">{/* Search and Filter UI remains the same */}</div>
+      <div className="card">{}</div>
 
       <div className="card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">{/* Table Head remains the same */}</thead>
+            <thead className="bg-gray-50">{}</thead>
             <tbody>
               {filteredIncidents.map((incident) => (
                 <tr key={incident.id} className="border-t hover:bg-gray-50">
@@ -117,7 +116,7 @@ const IncidentManagement = () => {
   );
 };
 
-// NAYA COMPONENT: Modal form alag se banaya gaya hai
+
 const IncidentFormModal = ({ incident, isEditing, onClose, onSave }) => {
   const [formData, setFormData] = useState(
     incident || {

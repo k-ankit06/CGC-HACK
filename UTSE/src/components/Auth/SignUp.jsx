@@ -2,11 +2,11 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Shield, Globe, AlertCircle } from 'lucide-react'
 import { useAuth } from './AuthContext'
-import { motion } from 'framer-motion'  // For animations
+import { motion } from 'framer-motion'  
 
 const SignUp = () => {
   const [userType, setUserType] = useState('tourist')
-  const [touristType, setTouristType] = useState('international')  // New: Domestic or International
+  const [touristType, setTouristType] = useState('international')  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,7 +15,7 @@ const SignUp = () => {
     confirmPassword: '',
     country: '',
     passportNumber: '',
-    aadhaarNumber: '',  // New: For domestic
+    aadhaarNumber: '',  
     emergencyContact: '',
     departmentId: '',
     designation: ''
@@ -42,7 +42,7 @@ const SignUp = () => {
       id: Date.now(),
       ...formData,
       role: userType,
-      touristType: userType === 'tourist' ? touristType : null,  // Save touristType
+      touristType: userType === 'tourist' ? touristType : null,  
       isRegistered: false
     }
     
@@ -65,7 +65,7 @@ const SignUp = () => {
         </div>
 
         <div className="bg-white rounded-lg shadow-xl p-8">
-          {/* User Type Toggle */}
+        
           <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
             <button
               onClick={() => setUserType('tourist')}
@@ -154,7 +154,7 @@ const SignUp = () => {
                     />
                   </div>
 
-                  {/* New: Domestic/International Selection */}
+                  
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Tourist Type
@@ -183,7 +183,6 @@ const SignUp = () => {
                     </div>
                   </div>
 
-                  {/* Conditional ID Field */}
                   {touristType === 'international' ? (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">

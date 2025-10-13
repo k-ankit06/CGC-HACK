@@ -17,7 +17,7 @@ const Login = () => {
     e.preventDefault()
     setError('')
 
-    // Mock authentication - Replace with actual API call
+  
     if (formData.email && formData.password) {
       const userData = {
         id: Date.now(),
@@ -45,7 +45,7 @@ const Login = () => {
         </div>
 
         <div className="bg-white rounded-2xl shadow-2xl p-8">
-          {/* User Type Toggle */}
+    
           <div className="flex mb-6 bg-gray-100 rounded-xl p-1">
             <button
               onClick={() => setUserType('tourist')}

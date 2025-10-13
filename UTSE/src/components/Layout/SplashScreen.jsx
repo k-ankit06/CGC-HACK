@@ -6,10 +6,10 @@ import { Shield } from 'lucide-react'
 const SplashScreen = () => {
   const navigate = useNavigate()
 
-  // Redirect to login after 3 seconds
+  
   useEffect(() => {
     const timer = setTimeout(() => {
-      // Save splash shown flag in session (so it doesn't show again on refresh)
+      
       sessionStorage.setItem('splashShown', 'true')
       navigate('/login')
     }, 3000)
@@ -17,15 +17,14 @@ const SplashScreen = () => {
     return () => clearTimeout(timer)
   }, [navigate])
 
-  // Check if splash has already been shown in this session
+
   if (sessionStorage.getItem('splashShown')) {
     navigate('/login');
-    return null; // Render nothing while redirecting
+    return null; 
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-600 to-primary-900 flex flex-col items-center justify-center text-white">
-      {/* Animated Logo */}
       <motion.div
         initial={{ scale: 0, rotate: 0 }}
         animate={{ scale: 1, rotate: 360 }}
@@ -54,7 +53,6 @@ const SplashScreen = () => {
         Your Safety Companion in India
       </motion.p>
 
-      {/* Loading Dots */}
       <motion.div
         className="flex gap-2 mt-12"
         initial={{ opacity: 0 }}

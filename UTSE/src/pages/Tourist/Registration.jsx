@@ -47,7 +47,7 @@ const TouristRegistration = () => {
   };
 
   const handleSubmit = () => {
-    // ... Unique ID check logic remains the same ...
+    
 
     if (!isAddingMember) {
       const registrationData = { ...formData, touristId: `TID-${Date.now()}`, isRegistered: true, group: [] };
@@ -71,12 +71,12 @@ const TouristRegistration = () => {
   };
 
   const finishGroupRegistration = () => {
-    // FIX: Yeh function ab single user aur group user, dono ke liye kaam karega
+    
     const finalData = { ...(primaryUser || user), group: groupMembers };
 
-    // Dono "notebooks" mein data save karo
+
     localStorage.setItem('touristData', JSON.stringify(finalData));
-    updateUser(finalData); // Context ko bhi final data se update karo
+    updateUser(finalData); 
 
     const allTourists = JSON.parse(localStorage.getItem('allTourists') || '[]');
     const existingIndex = allTourists.findIndex(t => t.email === finalData.email);
