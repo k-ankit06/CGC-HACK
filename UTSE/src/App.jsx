@@ -3,7 +3,7 @@ import { AuthProvider } from './components/Auth/AuthContext'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
 import Login from './components/Auth/Login'
 import SignUp from './components/Auth/SignUp'
-
+import SplashScreen from './components/Layout/SplashScreen'
 // Authority Pages
 import AuthorityLayout from './components/Layout/AuthorityLayout'
 import AuthorityDashboard from './pages/Authority/Dashboard'
@@ -36,6 +36,7 @@ function App() {
       <AuthProvider>
         <AnimatePresence mode="wait">
           <Routes>
+            <Route path="/" element={<SplashScreen />} />
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
