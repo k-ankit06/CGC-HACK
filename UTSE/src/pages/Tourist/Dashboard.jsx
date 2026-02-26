@@ -4,6 +4,15 @@ import { useAuth } from '../../components/Auth/AuthContext'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 
+const glassCard = {
+  background: 'rgba(255, 255, 255, 0.06)',
+  backdropFilter: 'blur(24px)',
+  WebkitBackdropFilter: 'blur(24px)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  borderRadius: '1rem',
+  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+}
+
 const TouristDashboard = () => {
   const { user } = useAuth()
   const [panicActive, setPanicActive] = useState(false)
@@ -11,44 +20,23 @@ const TouristDashboard = () => {
   const [locationLoading, setLocationLoading] = useState(false)
   const [locationError, setLocationError] = useState('')
 
-  const handlePanic = () => {
-    setPanicActive(true)
-    setTimeout(() => setPanicActive(false), 3000)
-  }
+  const handlePanic = () => { setPanicActive(true); setTimeout(() => setPanicActive(false), 3000) }
 
   const fetchLocation = () => {
-    setLocationLoading(true)
-    setLocationError('')
+    setLocationLoading(true); setLocationError('')
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
-          const lat = position.coords.latitude
-          const lng = position.coords.longitude
+          const lat = position.coords.latitude, lng = position.coords.longitude
           try {
             const response = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
-            const address = response.data.display_name || 'Unknown location'
-            setCurrentLocation({ lat, lng, address })
-          } catch (err) {
-            setLocationError('Unable to fetch address. Showing coordinates only.')
-            setCurrentLocation({ lat, lng, address: 'Address not available' })
-          } finally {
-            setLocationLoading(false)
-          }
-        },
-        (error) => {
+            setCurrentLocation({ lat, lng, address: response.data.display_name || 'Unknown' })
+          } catch { setCurrentLocation({ lat, lng, address: 'Address not available' }) }
           setLocationLoading(false)
-          switch(error.code) {
-            case error.PERMISSION_DENIED: setLocationError("Permission denied. Please allow location access."); break
-            case error.POSITION_UNAVAILABLE: setLocationError("Location information is unavailable."); break
-            case error.TIMEOUT: setLocationError("The request to get user location timed out."); break
-            default: setLocationError("An unknown error occurred.");
-          }
-        }
+        },
+        (error) => { setLocationLoading(false); setLocationError("Location error: " + error.message) }
       )
-    } else {
-      setLocationError("Geolocation is not supported by this browser.")
-      setLocationLoading(false)
-    }
+    } else { setLocationError("Geolocation not supported."); setLocationLoading(false) }
   }
 
   const safetyScore = 92
@@ -63,63 +51,136 @@ const TouristDashboard = () => {
     { type: 'warning', message: 'Pickpocket alert in Sadar Bazaar area. Keep valuables secure.', time: '1 hour ago' },
     { type: 'success', message: 'You are in a safe zone. Enjoy your visit!', time: '2 hours ago' },
   ]
-  const recentActivity = [
-    { action: 'Check-in at Taj Mahal', time: '2 hours ago', icon: MapPin },
-    { action: 'Safety score updated', time: '3 hours ago', icon: Shield },
-    { action: 'Visited India Gate', time: '1 day ago', icon: MapPin },
-  ]
+
+  const containerAnim = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } }
+  const itemAnim = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="space-y-6">
-      <div>
-        <motion.h2 initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="text-3xl font-bold text-gray-900">Welcome, {user?.name}! 👋</motion.h2>
-        <p className="text-gray-600 mt-1">Your safety is our priority. Have a wonderful journey! 🌟</p>
-      </div>
-      <motion.div whileHover={{ scale: 1.02 }} className="card bg-gradient-to-r from-danger-500 to-danger-600 text-white rounded-xl shadow-2xl">
+    <motion.div variants={containerAnim} initial="hidden" animate="visible" className="space-y-6">
+      {/* Header */}
+      <motion.div variants={itemAnim}>
+        <h2 className="text-3xl font-bold text-white" style={{ textShadow: '0 0 30px rgba(99,102,241,0.4)' }}>Welcome, {user?.name}! 👋</h2>
+        <p className="mt-1" style={{ color: 'rgba(199,210,254,0.6)' }}>Your safety is our priority. Have a wonderful journey! 🌟</p>
+      </motion.div>
+
+      {/* SOS */}
+      <motion.div variants={itemAnim} whileHover={{ scale: 1.01 }} className="p-6" style={{ ...glassCard, background: 'linear-gradient(135deg, rgba(239,68,68,0.25), rgba(220,38,38,0.1))', border: '1px solid rgba(239,68,68,0.3)' }}>
         <div className="flex items-center justify-between">
-          <div className="flex-1"><h3 className="text-xl font-bold mb-2">Emergency SOS 🚨</h3><p className="text-danger-100">In case of emergency, press the panic button for immediate help</p></div>
-          <motion.button animate={panicActive ? { scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] } : {}} transition={{ duration: 0.3, repeat: panicActive ? Infinity : 0 }} onClick={handlePanic} className={`relative w-24 h-24 rounded-full transition-all duration-300 font-bold text-lg shadow-xl ${panicActive ? 'bg-white text-danger-600 animate-pulse' : 'bg-white/20 hover:bg-white/30'}`} title="Press for SOS">
-            {panicActive ? (<div className="flex flex-col items-center"><AlertTriangle className="h-10 w-10 animate-bounce" /><span className="text-xs mt-1">HELP!</span></div>) : (<div className="flex flex-col items-center"><AlertTriangle className="h-10 w-10" /><span className="text-xs mt-1">SOS</span></div>)}
+          <div className="flex-1">
+            <h3 className="text-xl font-bold text-white mb-2">Emergency SOS 🚨</h3>
+            <p style={{ color: 'rgba(254,202,202,0.7)' }}>Press the panic button for immediate help</p>
+          </div>
+          <motion.button animate={panicActive ? { scale: [1, 1.1, 1] } : {}} transition={{ duration: 0.3, repeat: panicActive ? Infinity : 0 }} onClick={handlePanic}
+            className="w-24 h-24 rounded-full font-bold text-lg"
+            style={{ background: panicActive ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.15)', color: panicActive ? '#dc2626' : '#fff', boxShadow: panicActive ? '0 0 40px rgba(239,68,68,0.6)' : '0 0 20px rgba(239,68,68,0.2)' }}>
+            <div className="flex flex-col items-center"><AlertTriangle className={`h-10 w-10 ${panicActive ? 'animate-bounce' : ''}`} /><span className="text-xs mt-1">{panicActive ? 'HELP!' : 'SOS'}</span></div>
           </motion.button>
         </div>
-        {panicActive && (<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-4 bg-white/20 backdrop-blur rounded-lg p-3 animate-pulse"><p className="font-semibold">🚨 Emergency alert sent! Help is on the way...</p><p className="text-sm text-danger-100 mt-2">Tourist Police: 2 mins away • Ambulance dispatched</p></motion.div>)}
+        {panicActive && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-4 rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.1)' }}>
+            <p className="font-semibold text-white">🚨 Emergency alert sent! Help is on the way...</p>
+          </motion.div>
+        )}
       </motion.div>
+
+      {/* Score + Location */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div whileHover={{ scale: 1.02 }} className="card shadow-lg">
-          <div className="flex items-center justify-between mb-4"><h3 className="text-lg font-bold text-gray-900">Your Safety Score</h3><Shield className="h-6 w-6 text-primary-600" /></div>
+        <motion.div variants={itemAnim} whileHover={{ scale: 1.02 }} className="p-6" style={glassCard}>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-white">Your Safety Score</h3>
+            <Shield className="h-6 w-6" style={{ color: '#818cf8' }} />
+          </div>
           <div className="text-center">
-            <motion.div className={`text-6xl font-bold mb-2 ${safetyScore >= 80 ? 'text-success-600' : safetyScore >= 60 ? 'text-warning-600' : 'text-danger-600'}`}>{safetyScore}</motion.div>
-            <p className={`text-lg font-semibold mb-4 ${safetyScore >= 80 ? 'text-success-600' : safetyScore >= 60 ? 'text-warning-600' : 'text-danger-600'}`}>{safetyScore >= 80 ? 'Safe Zone' : safetyScore >= 60 ? 'Moderate Risk' : 'High Risk'}</p>
-            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden"><motion.div initial={{ width: 0 }} animate={{ width: `${safetyScore}%` }} transition={{ duration: 1 }} className={`h-3 rounded-full ${safetyScore >= 80 ? 'bg-success-500' : safetyScore >= 60 ? 'bg-warning-500' : 'bg-danger-500'}`}></motion.div></div>
-            <p className="text-sm text-gray-600 mt-3">Based on location, time, crowd density, and weather conditions 📊</p>
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200 }}
+              className="text-6xl font-bold mb-2" style={{ color: '#4ade80', textShadow: '0 0 30px rgba(74,222,128,0.4)' }}>{safetyScore}</motion.div>
+            <p className="text-lg font-semibold mb-4" style={{ color: '#86efac' }}>Safe Zone ✅</p>
+            <div className="w-full rounded-full h-3 overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
+              <motion.div initial={{ width: 0 }} animate={{ width: `${safetyScore}%` }} transition={{ duration: 1.5 }}
+                className="h-3 rounded-full" style={{ background: 'linear-gradient(90deg, #6366f1, #06b6d4, #4ade80)' }} />
+            </div>
           </div>
         </motion.div>
-        <motion.div whileHover={{ scale: 1.02 }} className="card shadow-lg">
-          <div className="flex items-center justify-between mb-4"><h3 className="text-lg font-bold text-gray-900">Current Location</h3><MapPin className="h-6 w-6 text-primary-600" /></div>
-          <div className="space-y-3">
-            <div className="bg-primary-50 p-4 rounded-lg"><p className="text-sm text-gray-600 mb-1">You are at</p><p className="text-xl font-bold text-primary-900">{currentLocation.address}</p><p className="text-sm text-gray-600 mt-2">📍 Lat: {currentLocation.lat ? currentLocation.lat.toFixed(4) : 'N/A'}, Lng: {currentLocation.lng ? currentLocation.lng.toFixed(4) : 'N/A'}</p>{locationError && <p className="text-sm text-danger-600 mt-2">{locationError}</p>}</div>
-            <div className="grid grid-cols-2 gap-2"><motion.button whileHover={{ scale: 1.05 }} onClick={fetchLocation} disabled={locationLoading} className="btn-primary text-sm">{locationLoading ? 'Fetching...' : <Navigation className="inline h-4 w-4 mr-1" />}{locationLoading ? 'Loading...' : 'Fetch Location'}</motion.button><motion.button whileHover={{ scale: 1.05 }} className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 text-sm font-medium"><MapPin className="inline h-4 w-4 mr-1" />Safe Routes</motion.button></div>
+
+        <motion.div variants={itemAnim} whileHover={{ scale: 1.02 }} className="p-6" style={glassCard}>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-white">Current Location</h3>
+            <MapPin className="h-6 w-6" style={{ color: '#818cf8' }} />
+          </div>
+          <div className="rounded-xl p-4 mb-3" style={{ background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: '0.75rem' }}>
+            <p className="text-sm mb-1" style={{ color: 'rgba(199,210,254,0.5)' }}>You are at</p>
+            <p className="text-xl font-bold text-white">{currentLocation.address}</p>
+            <p className="text-sm mt-2" style={{ color: 'rgba(199,210,254,0.5)' }}>📍 Lat: {currentLocation.lat ? currentLocation.lat.toFixed(4) : 'N/A'}, Lng: {currentLocation.lng ? currentLocation.lng.toFixed(4) : 'N/A'}</p>
+            {locationError && <p className="text-sm mt-2" style={{ color: '#fca5a5' }}>{locationError}</p>}
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={fetchLocation} disabled={locationLoading}
+              className="py-2.5 rounded-xl font-medium text-sm text-white flex items-center justify-center gap-1"
+              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 4px 15px rgba(99,102,241,0.3)' }}>
+              <Navigation className="h-4 w-4" />{locationLoading ? 'Loading...' : 'Fetch Location'}
+            </motion.button>
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+              className="py-2.5 rounded-xl font-medium text-sm text-white flex items-center justify-center gap-1"
+              style={{ background: 'linear-gradient(135deg, #a855f7, #6366f1)', boxShadow: '0 4px 15px rgba(168,85,247,0.3)' }}>
+              <MapPin className="h-4 w-4" />Safe Routes
+            </motion.button>
           </div>
         </motion.div>
       </div>
-      <div className="card">
-        <h3 className="text-lg font-bold mb-4">Quick Actions ⚡</h3>
+
+      {/* Quick Actions */}
+      <motion.div variants={itemAnim} className="p-6" style={glassCard}>
+        <h3 className="text-lg font-bold text-white mb-4">Quick Actions ⚡</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[{ icon: QrCode, label: 'My Tourist Card' }, { icon: Phone, label: 'Emergency Contacts' }, { icon: MapPin, label: 'Nearby Help' }, { icon: Shield, label: 'Safety Tips' }].map((action, index) => (<motion.button key={index} whileHover={{ scale: 1.05, rotate: 5 }} transition={{ duration: 0.2 }} className="p-4 bg-gradient-to-br from-primary-500 to-primary-600 text-white rounded-lg hover:shadow-lg transition-shadow" title={action.label}><action.icon className="h-8 w-8 mb-2 mx-auto" /><p className="text-sm font-semibold">{action.label}</p></motion.button>))}
+          {[{ icon: QrCode, label: 'My Tourist Card', gradient: 'linear-gradient(135deg, #6366f1, #8b5cf6)' },
+          { icon: Phone, label: 'Emergency Contacts', gradient: 'linear-gradient(135deg, #ef4444, #f87171)' },
+          { icon: MapPin, label: 'Nearby Help', gradient: 'linear-gradient(135deg, #06b6d4, #22d3ee)' },
+          { icon: Shield, label: 'Safety Tips', gradient: 'linear-gradient(135deg, #10b981, #34d399)' }
+          ].map((action, index) => (
+            <motion.button key={index} whileHover={{ scale: 1.08, y: -5 }} whileTap={{ scale: 0.95 }}
+              className="p-5 text-white rounded-2xl" style={{ background: action.gradient, boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}>
+              <action.icon className="h-8 w-8 mb-2 mx-auto" /><p className="text-sm font-semibold">{action.label}</p>
+            </motion.button>
+          ))}
         </div>
-      </div>
-      <div className="card">
-        <h3 className="text-lg font-bold mb-4 flex items-center"><MapPin className="h-5 w-5 mr-2 text-primary-600" />Nearby Help Points</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{nearbyHelp.map((help, index) => (<div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"><div className="flex items-start justify-between"><div className="flex-1"><p className="text-xs text-gray-500 mb-1">{help.type}</p><p className="font-semibold text-gray-900">{help.name}</p><p className="text-sm text-gray-600 mt-1">📍 {help.distance} away</p></div><button className="bg-primary-600 text-white p-2 rounded-lg hover:bg-primary-700"><Phone className="h-4 w-4" /></button></div></div>))}</div>
-      </div>
-      <div className="card">
-        <h3 className="text-lg font-bold mb-4 flex items-center"><Bell className="h-5 w-5 mr-2 text-primary-600" />Safety Alerts & Notifications</h3>
-        <div className="space-y-3">{safetyAlerts.map((alert, index) => (<div key={index} className={`border-l-4 p-4 rounded ${alert.type === 'success' ? 'border-success-500 bg-success-50' : alert.type === 'warning' ? 'border-warning-500 bg-warning-50' : 'border-primary-500 bg-primary-50'}`}><p className="font-medium text-gray-900">{alert.message}</p><p className="text-xs text-gray-600 mt-1">{alert.time}</p></div>))}</div>
-      </div>
-      <div className="card">
-        <h3 className="text-lg font-bold mb-4 flex items-center"><Activity className="h-5 w-5 mr-2 text-primary-600" />Recent Activity</h3>
-        <div className="space-y-3">{recentActivity.map((activity, index) => { const Icon = activity.icon; return (<div key={index} className="flex items-center gap-3 pb-3 border-b border-gray-100 last:border-0"><div className="p-2 bg-primary-100 rounded-lg"><Icon className="h-5 w-5 text-primary-600" /></div><div className="flex-1"><p className="font-medium text-gray-900">{activity.action}</p><p className="text-sm text-gray-600">{activity.time}</p></div></div>)})}</div>
-      </div>
+      </motion.div>
+
+      {/* Nearby Help */}
+      <motion.div variants={itemAnim} className="p-6" style={glassCard}>
+        <h3 className="text-lg font-bold text-white mb-4 flex items-center"><MapPin className="h-5 w-5 mr-2" style={{ color: '#818cf8' }} />Nearby Help Points</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {nearbyHelp.map((help, index) => (
+            <motion.div key={index} whileHover={{ scale: 1.02 }} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.75rem' }}>
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <p className="text-xs mb-1" style={{ color: 'rgba(199,210,254,0.4)' }}>{help.type}</p>
+                  <p className="font-semibold text-white">{help.name}</p>
+                  <p className="text-sm mt-1" style={{ color: 'rgba(199,210,254,0.5)' }}>📍 {help.distance} away</p>
+                </div>
+                <motion.button whileHover={{ scale: 1.1 }} className="p-2 rounded-xl text-white" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
+                  <Phone className="h-4 w-4" />
+                </motion.button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Safety Alerts */}
+      <motion.div variants={itemAnim} className="p-6" style={glassCard}>
+        <h3 className="text-lg font-bold text-white mb-4 flex items-center"><Bell className="h-5 w-5 mr-2" style={{ color: '#818cf8' }} />Safety Alerts</h3>
+        <div className="space-y-3">
+          {safetyAlerts.map((alert, index) => (
+            <motion.div key={index} whileHover={{ x: 5 }} className="p-4 rounded-xl" style={{
+              borderLeft: `4px solid ${alert.type === 'success' ? '#4ade80' : alert.type === 'warning' ? '#facc15' : '#818cf8'}`,
+              background: alert.type === 'success' ? 'rgba(74,222,128,0.08)' : alert.type === 'warning' ? 'rgba(250,204,21,0.08)' : 'rgba(129,140,248,0.08)',
+              borderRadius: '0.75rem'
+            }}>
+              <p className="font-medium text-white">{alert.message}</p>
+              <p className="text-xs mt-1" style={{ color: 'rgba(199,210,254,0.4)' }}>{alert.time}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
     </motion.div>
   )
 }

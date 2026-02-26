@@ -1,98 +1,87 @@
-import { useState } from 'react';
-import { FileText, Plus, Search, Download, Eye, Edit, Trash2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react'
+import { FileText, Plus, Search, Eye, Trash2 } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+
+const glass = { background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }
+const cAnim = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08 } } }
+const iAnim = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }
+const inputStyle = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '0.75rem', color: '#fff', padding: '0.75rem 1rem', width: '100%', outline: 'none' }
+const labelStyle = { color: 'rgba(153,246,228,0.7)', fontSize: '0.875rem', fontWeight: 600, display: 'block', marginBottom: '0.25rem' }
 
 const initialIncidentsData = [
   { id: 'INC-2024-001', type: 'Medical Emergency', tourist: 'John Anderson', location: 'Taj Mahal, Agra', date: '2024-01-20', time: '14:30', severity: 'Critical', status: 'Resolved', description: 'Tourist collapsed due to heat exhaustion', responseTeam: 'Medical Team Alpha', officer: 'Officer Sharma' },
   { id: 'INC-2024-002', type: 'Theft', tourist: 'Sarah Williams', location: 'India Gate, Delhi', date: '2024-01-21', time: '16:45', severity: 'High', status: 'Investigating', description: 'Wallet and phone stolen', responseTeam: 'Police Unit Bravo', officer: 'Officer Kumar' },
   { id: 'INC-2024-003', type: 'Lost Tourist', tourist: 'Hans Mueller', location: 'Red Fort, Delhi', date: '2024-01-21', time: '11:20', severity: 'Medium', status: 'Resolved', description: 'Tourist separated from group', responseTeam: 'Patrol Team Charlie', officer: 'Officer Patel' },
-];
+]
 
 const IncidentManagement = () => {
-  const [incidents, setIncidents] = useState(initialIncidentsData); 
-  const [showModal, setShowModal] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [selectedIncident, setSelectedIncident] = useState(null);
-  const [filterType, setFilterType] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [incidents, setIncidents] = useState(initialIncidentsData)
+  const [showModal, setShowModal] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [selectedIncident, setSelectedIncident] = useState(null)
+  const [filterType, setFilterType] = useState('all')
+  const [searchTerm, setSearchTerm] = useState('')
 
-  const handleAddNewIncident = (formData) => {
-    const newIncident = {
-      id: `INC-${Date.now().toString().slice(-5)}`,
-      ...formData,
-      status: 'In Progress' 
-    };
-    setIncidents([newIncident, ...incidents]);
-    setShowModal(false);
-  };
+  const handleAddNewIncident = (formData) => { setIncidents([{ id: `INC-${Date.now().toString().slice(-5)}`, ...formData, status: 'In Progress' }, ...incidents]); setShowModal(false) }
+  const handleUpdateIncident = (formData) => { setIncidents(incidents.map(inc => inc.id === formData.id ? { ...inc, ...formData } : inc)); setShowModal(false); setSelectedIncident(null) }
+  const handleDeleteIncident = (id) => { if (window.confirm("Delete this incident record?")) setIncidents(incidents.filter(inc => inc.id !== id)) }
+  const openModal = (incident = null) => { setSelectedIncident(incident); setIsEditing(!!incident); setShowModal(true) }
 
-  const handleUpdateIncident = (formData) => {
-    setIncidents(incidents.map(inc => inc.id === formData.id ? { ...inc, ...formData } : inc));
-    setShowModal(false);
-    setSelectedIncident(null);
-  };
+  const sevColor = (s) => ({ Critical: { bg: 'rgba(239,68,68,0.2)', c: '#fca5a5' }, High: { bg: 'rgba(245,158,11,0.2)', c: '#fde68a' }, Medium: { bg: 'rgba(250,204,21,0.2)', c: '#fef08a' }, Low: { bg: 'rgba(74,222,128,0.2)', c: '#bbf7d0' } }[s] || { bg: 'rgba(255,255,255,0.1)', c: '#fff' })
+  const statColor = (s) => s === 'Resolved' ? { bg: 'rgba(16,185,129,0.2)', c: '#6ee7b7' } : s === 'Investigating' ? { bg: 'rgba(245,158,11,0.2)', c: '#fde68a' } : { bg: 'rgba(6,182,212,0.2)', c: '#67e8f9' }
 
-  const handleDeleteIncident = (incidentId) => {
-    if (window.confirm("Are you sure you want to delete this incident record?")) {
-      setIncidents(incidents.filter(inc => inc.id !== incidentId));
-    }
-  };
-
-  const openModal = (incident = null) => {
-    setSelectedIncident(incident);
-    setIsEditing(!!incident);
-    setShowModal(true);
-  };
-  
-  const getStatusColor = (status) => {};
-  const getSeverityColor = (severity) => {};
-
-  const filteredIncidents = incidents.filter(incident => {
-    const matchesSearch = incident.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         incident.tourist.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         incident.type.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterType === 'all' || incident.type === filterType;
-    return matchesSearch && matchesFilter;
-  });
+  const filteredIncidents = incidents.filter(i => {
+    const matchesSearch = i.id.toLowerCase().includes(searchTerm.toLowerCase()) || i.tourist.toLowerCase().includes(searchTerm.toLowerCase()) || i.type.toLowerCase().includes(searchTerm.toLowerCase())
+    return matchesSearch && (filterType === 'all' || i.type === filterType)
+  })
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <motion.div variants={cAnim} initial="hidden" animate="visible" className="space-y-6">
+      <motion.div variants={iAnim} className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900">Incident Management</h2>
-          <p className="text-gray-600 mt-1">Comprehensive incident tracking and reporting system</p>
+          <h2 className="text-3xl font-bold text-white" style={{ textShadow: '0 0 30px rgba(6,182,212,0.4)' }}>Incident Management</h2>
+          <p className="mt-1" style={{ color: 'rgba(153,246,228,0.6)' }}>Comprehensive incident tracking and reporting</p>
         </div>
-        <button onClick={() => openModal()} className="btn-primary">
-          <Plus className="inline h-5 w-5 mr-2" /> Report New Incident
-        </button>
+        <motion.button whileHover={{ scale: 1.05 }} onClick={() => openModal()} className="px-4 py-2 rounded-xl font-semibold text-white" style={{ background: 'linear-gradient(135deg, #06b6d4, #0891b2)' }}><Plus className="inline h-5 w-5 mr-2" />Report New</motion.button>
+      </motion.div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {[{ l: 'Total Incidents', v: incidents.length, g: 'linear-gradient(135deg,#06b6d4,#0891b2)' }, { l: 'Resolved', v: incidents.filter(i => i.status === 'Resolved').length, g: 'linear-gradient(135deg,#10b981,#059669)' }, { l: 'In Progress', v: incidents.filter(i => i.status !== 'Resolved').length, g: 'linear-gradient(135deg,#f59e0b,#d97706)' }].map((s, i) => (
+          <motion.div key={i} variants={iAnim} whileHover={{ scale: 1.05, y: -5 }} className="p-5 rounded-2xl text-white" style={{ background: s.g, boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}>
+            <p className="text-sm opacity-80">{s.l}</p><p className="text-4xl font-bold mt-1">{s.v}</p>
+          </motion.div>
+        ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="card bg-gradient-to-br from-primary-500 to-primary-600 text-white"><p>Total Incidents</p><p className="text-4xl font-bold mt-1">{incidents.length}</p></div>
-        <div className="card bg-gradient-to-br from-success-500 to-success-600 text-white"><p>Resolved</p><p className="text-4xl font-bold mt-1">{incidents.filter(i => i.status === 'Resolved').length}</p></div>
-        <div className="card bg-gradient-to-br from-warning-500 to-warning-600 text-white"><p>In Progress</p><p className="text-4xl font-bold mt-1">{incidents.filter(i => i.status !== 'Resolved').length}</p></div>
-      </div>
+      {/* Search */}
+      <motion.div variants={iAnim} className="p-4" style={glass}>
+        <div className="flex items-center gap-2" style={{ ...inputStyle, display: 'flex' }}>
+          <Search className="h-5 w-5" style={{ color: 'rgba(153,246,228,0.4)' }} />
+          <input type="text" placeholder="Search incidents..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={{ background: 'transparent', border: 'none', color: '#fff', outline: 'none', flex: 1 }} />
+        </div>
+      </motion.div>
 
-      <div className="card">{}</div>
-
-      <div className="card overflow-hidden">
+      {/* Table */}
+      <motion.div variants={iAnim} className="p-0 overflow-hidden" style={{ ...glass, padding: 0 }}>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">{}</thead>
+            <thead><tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+              {['ID', 'Type', 'Tourist', 'Location', 'Date', 'Severity', 'Status', 'Actions'].map(h => <th key={h} className="text-left py-3 px-4 font-semibold text-sm" style={{ color: 'rgba(153,246,228,0.7)' }}>{h}</th>)}
+            </tr></thead>
             <tbody>
-              {filteredIncidents.map((incident) => (
-                <tr key={incident.id} className="border-t hover:bg-gray-50">
-                  <td className="py-4 px-4 font-mono text-sm font-semibold text-primary-600">{incident.id}</td>
-                  <td className="py-4 px-4">{incident.type}</td>
-                  <td className="py-4 px-4 font-medium">{incident.tourist}</td>
-                  <td className="py-4 px-4">{incident.location}</td>
-                  <td className="py-4 px-4"><div>{incident.date}</div><div className="text-sm">{incident.time}</div></td>
-                  <td className="py-4 px-4"><span className={`px-2 py-1 rounded-full text-xs font-semibold ${getSeverityColor(incident.severity)}`}>{incident.severity}</span></td>
-                  <td className="py-4 px-4"><span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(incident.status)}`}>{incident.status}</span></td>
+              {filteredIncidents.map((inc) => (
+                <tr key={inc.id} className="transition-colors" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                  <td className="py-4 px-4 font-mono text-sm font-semibold" style={{ color: '#22d3ee' }}>{inc.id}</td>
+                  <td className="py-4 px-4 text-white">{inc.type}</td>
+                  <td className="py-4 px-4 font-medium text-white">{inc.tourist}</td>
+                  <td className="py-4 px-4 text-sm" style={{ color: 'rgba(153,246,228,0.5)' }}>{inc.location}</td>
+                  <td className="py-4 px-4"><div className="text-white text-sm">{inc.date}</div><div className="text-xs" style={{ color: 'rgba(153,246,228,0.4)' }}>{inc.time}</div></td>
+                  <td className="py-4 px-4"><span className="px-2 py-1 rounded-full text-xs font-semibold" style={{ background: sevColor(inc.severity).bg, color: sevColor(inc.severity).c }}>{inc.severity}</span></td>
+                  <td className="py-4 px-4"><span className="px-2 py-1 rounded-full text-xs font-semibold" style={{ background: statColor(inc.status).bg, color: statColor(inc.status).c }}>{inc.status}</span></td>
                   <td className="py-4 px-4">
                     <div className="flex gap-2">
-                      <button onClick={() => openModal(incident)} className="p-2 text-primary-600 hover:bg-primary-50 rounded"><Eye className="h-4 w-4" /></button>
-                      <button onClick={() => handleDeleteIncident(incident.id)} className="p-2 text-danger-600 hover:bg-danger-50 rounded"><Trash2 className="h-4 w-4" /></button>
+                      <motion.button whileHover={{ scale: 1.1 }} onClick={() => openModal(inc)} className="p-2 rounded-lg" style={{ color: '#22d3ee' }}><Eye className="h-4 w-4" /></motion.button>
+                      <motion.button whileHover={{ scale: 1.1 }} onClick={() => handleDeleteIncident(inc.id)} className="p-2 rounded-lg" style={{ color: '#f87171' }}><Trash2 className="h-4 w-4" /></motion.button>
                     </div>
                   </td>
                 </tr>
@@ -100,68 +89,48 @@ const IncidentManagement = () => {
             </tbody>
           </table>
         </div>
-      </div>
-      
-      <AnimatePresence>
-        {showModal && (
-          <IncidentFormModal
-            incident={selectedIncident}
-            isEditing={isEditing}
-            onClose={() => setShowModal(false)}
-            onSave={isEditing ? handleUpdateIncident : handleAddNewIncident}
-          />
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
+      </motion.div>
 
+      {/* Modal */}
+      <AnimatePresence>
+        {showModal && (<IncidentFormModal incident={selectedIncident} isEditing={isEditing} onClose={() => setShowModal(false)} onSave={isEditing ? handleUpdateIncident : handleAddNewIncident} />)}
+      </AnimatePresence>
+    </motion.div>
+  )
+}
 
 const IncidentFormModal = ({ incident, isEditing, onClose, onSave }) => {
-  const [formData, setFormData] = useState(
-    incident || {
-      type: 'Medical Emergency', severity: 'Medium', tourist: '', location: '',
-      date: new Date().toISOString().split('T')[0], time: new Date().toTimeString().slice(0, 5),
-      description: '', responseTeam: 'Medical Team Alpha', officer: ''
-    }
-  );
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave(formData);
-  };
+  const [formData, setFormData] = useState(incident || { type: 'Medical Emergency', severity: 'Medium', tourist: '', location: '', date: new Date().toISOString().split('T')[0], time: new Date().toTimeString().slice(0, 5), description: '', responseTeam: 'Medical Team Alpha', officer: '' })
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
+  const handleSubmit = (e) => { e.preventDefault(); onSave(formData) }
+  const is = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '0.75rem', color: '#fff', padding: '0.75rem 1rem', width: '100%', outline: 'none' }
+  const ls = { color: 'rgba(153,246,228,0.7)', fontSize: '0.875rem', fontWeight: 600, display: 'block', marginBottom: '0.25rem' }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 50, opacity: 0 }} className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-2xl font-bold">{isEditing ? `Edit Incident: ${incident.id}` : 'Report New Incident'}</h3>
-            <button onClick={onClose} className="text-gray-500 text-2xl">×</button>
-          </div>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div><label className="block text-sm font-semibold">Incident Type *</label><select name="type" className="input-field" value={formData.type} onChange={handleChange}><option>Medical Emergency</option><option>Theft</option><option>Lost Tourist</option></select></div>
-              <div><label className="block text-sm font-semibold">Severity Level *</label><select name="severity" className="input-field" value={formData.severity} onChange={handleChange}><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
-              <div><label className="block text-sm font-semibold">Tourist Name *</label><input name="tourist" type="text" className="input-field" value={formData.tourist} onChange={handleChange} required /></div>
-              <div className="col-span-2"><label className="block text-sm font-semibold">Location *</label><input name="location" type="text" className="input-field" value={formData.location} onChange={handleChange} required /></div>
-              <div><label className="block text-sm font-semibold">Date *</label><input name="date" type="date" className="input-field" value={formData.date} onChange={handleChange} /></div>
-              <div><label className="block text-sm font-semibold">Time *</label><input name="time" type="time" className="input-field" value={formData.time} onChange={handleChange} /></div>
-              <div className="col-span-2"><label className="block text-sm font-semibold">Description *</label><textarea name="description" className="input-field" rows="3" value={formData.description} onChange={handleChange}></textarea></div>
-            </div>
-            <div className="flex gap-3 pt-4">
-              <button type="submit" className="flex-1 btn-primary">{isEditing ? 'Save Changes' : 'Submit Report'}</button>
-              <button type="button" onClick={onClose} className="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg">Cancel</button>
-            </div>
-          </form>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
+      <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 50, opacity: 0 }} className="max-w-3xl w-full max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: 'linear-gradient(135deg, #0a0a1a, #16213e)', border: '1px solid rgba(255,255,255,0.15)', boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }}>
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-2xl font-bold text-white">{isEditing ? `Edit: ${incident.id}` : 'Report New Incident'}</h3>
+          <button onClick={onClose} className="text-white/50 hover:text-white text-2xl">×</button>
         </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div><label style={ls}>Incident Type *</label><select name="type" style={is} value={formData.type} onChange={handleChange}><option>Medical Emergency</option><option>Theft</option><option>Lost Tourist</option></select></div>
+            <div><label style={ls}>Severity *</label><select name="severity" style={is} value={formData.severity} onChange={handleChange}><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+            <div><label style={ls}>Tourist Name *</label><input name="tourist" type="text" style={is} value={formData.tourist} onChange={handleChange} required /></div>
+            <div className="col-span-2"><label style={ls}>Location *</label><input name="location" type="text" style={is} value={formData.location} onChange={handleChange} required /></div>
+            <div><label style={ls}>Date *</label><input name="date" type="date" style={{ ...is, colorScheme: 'dark' }} value={formData.date} onChange={handleChange} /></div>
+            <div><label style={ls}>Time *</label><input name="time" type="time" style={{ ...is, colorScheme: 'dark' }} value={formData.time} onChange={handleChange} /></div>
+            <div className="col-span-2"><label style={ls}>Description *</label><textarea name="description" style={{ ...is, resize: 'vertical' }} rows="3" value={formData.description} onChange={handleChange} /></div>
+          </div>
+          <div className="flex gap-3 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+            <motion.button whileHover={{ scale: 1.03 }} type="submit" className="flex-1 py-3 rounded-xl font-semibold text-white" style={{ background: 'linear-gradient(135deg, #06b6d4, #0891b2)' }}>{isEditing ? 'Save Changes' : 'Submit Report'}</motion.button>
+            <motion.button whileHover={{ scale: 1.03 }} type="button" onClick={onClose} className="flex-1 py-3 rounded-xl font-semibold text-white" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}>Cancel</motion.button>
+          </div>
+        </form>
       </motion.div>
     </motion.div>
-  );
-};
+  )
+}
 
-export default IncidentManagement;
+export default IncidentManagement

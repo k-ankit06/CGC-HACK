@@ -1,345 +1,177 @@
 import { useState } from 'react'
 import { Phone, MapPin, Activity, Shield, AlertTriangle, Navigation, Clock } from 'lucide-react'
+import { motion } from 'framer-motion'
+
+const glass = { background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem', boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)' }
+const containerAnim = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08 } } }
+const itemAnim = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }
 
 const EmergencyHelp = () => {
   const [selectedEmergency, setSelectedEmergency] = useState(null)
   const [panicActivated, setPanicActivated] = useState(false)
 
   const emergencyContacts = [
-    {
-      id: 1,
-      type: 'Police Emergency',
-      number: '100',
-      icon: Shield,
-      color: 'primary',
-      description: 'For crime, theft, or security emergencies',
-      avgResponseTime: '5-8 minutes',
-      available247: true
-    },
-    {
-      id: 2,
-      type: 'Medical Emergency',
-      number: '102',
-      icon: Activity,
-      color: 'danger',
-      description: 'For medical emergencies and ambulance services',
-      avgResponseTime: '8-12 minutes',
-      available247: true
-    },
-    {
-      id: 3,
-      type: 'Tourist Police',
-      number: '1363',
-      icon: Shield,
-      color: 'purple',
-      description: 'Dedicated helpline for tourist assistance',
-      avgResponseTime: '3-5 minutes',
-      available247: true
-    },
-    {
-      id: 4,
-      type: 'Women Helpline',
-      number: '1091',
-      icon: AlertTriangle,
-      color: 'danger',
-      description: 'Emergency helpline for women in distress',
-      avgResponseTime: '5-7 minutes',
-      available247: true
-    }
+    { id: 1, type: 'Police Emergency', number: '100', icon: Shield, gradient: 'linear-gradient(135deg, #6366f1, #8b5cf6)', description: 'For crime, theft, or security emergencies', avgResponseTime: '5-8 minutes', available247: true },
+    { id: 2, type: 'Medical Emergency', number: '102', icon: Activity, gradient: 'linear-gradient(135deg, #ef4444, #f87171)', description: 'For medical emergencies and ambulance services', avgResponseTime: '8-12 minutes', available247: true },
+    { id: 3, type: 'Tourist Police', number: '1363', icon: Shield, gradient: 'linear-gradient(135deg, #a855f7, #c084fc)', description: 'Dedicated helpline for tourist assistance', avgResponseTime: '3-5 minutes', available247: true },
+    { id: 4, type: 'Women Helpline', number: '1091', icon: AlertTriangle, gradient: 'linear-gradient(135deg, #ec4899, #f472b6)', description: 'Emergency helpline for women in distress', avgResponseTime: '5-7 minutes', available247: true }
   ]
 
   const nearbyEmergencyServices = [
-    {
-      name: 'District Hospital Agra',
-      type: 'Hospital',
-      distance: '2.1 km',
-      address: 'MG Road, Agra',
-      phone: '+91-562-2226355',
-      rating: 4.2,
-      facilities: ['Emergency Ward', 'ICU', 'Trauma Center']
-    },
-    {
-      name: 'Taj Ganj Police Station',
-      type: 'Police',
-      distance: '0.5 km',
-      address: 'Near Taj Mahal, Agra',
-      phone: '+91-562-2330047',
-      rating: 4.0,
-      facilities: ['24/7 Service', 'Tourist Help Desk']
-    },
-    {
-      name: 'Pushpanjali Hospital',
-      type: 'Hospital',
-      distance: '3.5 km',
-      address: 'Fatehabad Road, Agra',
-      phone: '+91-562-4045454',
-      rating: 4.5,
-      facilities: ['Emergency', 'Pharmacy', 'Ambulance']
-    },
-    {
-      name: 'Tourist Police Booth',
-      type: 'Tourist Help',
-      distance: '0.3 km',
-      address: 'Taj East Gate',
-      phone: '+91-562-2227261',
-      rating: 4.8,
-      facilities: ['Tourist Assistance', 'Lost & Found']
-    }
+    { name: 'District Hospital Agra', type: 'Hospital', distance: '2.1 km', address: 'MG Road, Agra', phone: '+91-562-2226355', rating: 4.2, facilities: ['Emergency Ward', 'ICU', 'Trauma Center'] },
+    { name: 'Taj Ganj Police Station', type: 'Police', distance: '0.5 km', address: 'Near Taj Mahal, Agra', phone: '+91-562-2330047', rating: 4.0, facilities: ['24/7 Service', 'Tourist Help Desk'] },
+    { name: 'Pushpanjali Hospital', type: 'Hospital', distance: '3.5 km', address: 'Fatehabad Road, Agra', phone: '+91-562-4045454', rating: 4.5, facilities: ['Emergency', 'Pharmacy', 'Ambulance'] },
+    { name: 'Tourist Police Booth', type: 'Tourist Help', distance: '0.3 km', address: 'Taj East Gate', phone: '+91-562-2227261', rating: 4.8, facilities: ['Tourist Assistance', 'Lost & Found'] }
   ]
 
   const embassyContacts = [
-    { country: 'USA', phone: '+91-11-2419-8000', city: 'New Delhi' },
-    { country: 'UK', phone: '+91-11-2419-2100', city: 'New Delhi' },
-    { country: 'Canada', phone: '+91-11-4178-2000', city: 'New Delhi' },
-    { country: 'Australia', phone: '+91-11-4139-9900', city: 'New Delhi' },
-    { country: 'Germany', phone: '+91-11-4479-9199', city: 'New Delhi' },
-    { country: 'France', phone: '+91-11-4319-6100', city: 'New Delhi' }
+    { country: 'USA', phone: '+91-11-2419-8000', city: 'New Delhi' }, { country: 'UK', phone: '+91-11-2419-2100', city: 'New Delhi' },
+    { country: 'Canada', phone: '+91-11-4178-2000', city: 'New Delhi' }, { country: 'Australia', phone: '+91-11-4139-9900', city: 'New Delhi' },
+    { country: 'Germany', phone: '+91-11-4479-9199', city: 'New Delhi' }, { country: 'France', phone: '+91-11-4319-6100', city: 'New Delhi' }
   ]
 
-  const handlePanic = () => {
-    setPanicActivated(true)
-    
-    setTimeout(() => {
-      setPanicActivated(false)
-    }, 5000)
-  }
-
-  const getColorClasses = (color) => {
-    const colors = {
-      primary: 'from-primary-500 to-primary-600',
-      danger: 'from-danger-500 to-danger-600',
-      purple: 'from-purple-500 to-purple-600',
-      success: 'from-success-500 to-success-600'
-    }
-    return colors[color] || colors.primary
-  }
-
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold text-gray-900">Emergency Help</h2>
-        <p className="text-gray-600 mt-1">Immediate assistance and emergency contacts at your fingertips</p>
-      </div>
+    <motion.div variants={containerAnim} initial="hidden" animate="visible" className="space-y-6">
+      <motion.div variants={itemAnim}>
+        <h2 className="text-3xl font-bold text-white" style={{ textShadow: '0 0 30px rgba(99,102,241,0.4)' }}>Emergency Help</h2>
+        <p className="mt-1" style={{ color: 'rgba(199,210,254,0.6)' }}>Immediate assistance and emergency contacts at your fingertips</p>
+      </motion.div>
 
-      
-      <div className="card bg-gradient-to-r from-danger-500 to-danger-600 text-white">
+      {/* SOS */}
+      <motion.div variants={itemAnim} className="p-6" style={{ ...glass, background: 'linear-gradient(135deg, rgba(239,68,68,0.25), rgba(220,38,38,0.1))', border: '1px solid rgba(239,68,68,0.3)' }}>
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <h3 className="text-2xl font-bold mb-2">🚨 Emergency SOS</h3>
-            <p className="text-danger-100 mb-4">
-              Press this button in case of immediate emergency. Your location will be sent to nearest authorities.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={handlePanic}
-                className={`px-8 py-4 rounded-xl font-bold text-lg transition-all ${
-                  panicActivated
-                    ? 'bg-white text-danger-600 animate-pulse scale-105'
-                    : 'bg-white/20 hover:bg-white/30 backdrop-blur'
-                } shadow-xl`}
-              >
+            <h3 className="text-2xl font-bold text-white mb-2">🚨 Emergency SOS</h3>
+            <p style={{ color: 'rgba(254,202,202,0.7)' }}>Press this button to send immediate emergency alert</p>
+            <div className="flex gap-3 mt-4">
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => { setPanicActivated(true); setTimeout(() => setPanicActivated(false), 5000) }}
+                className="px-8 py-4 rounded-xl font-bold text-lg" style={{ background: panicActivated ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.15)', color: panicActivated ? '#dc2626' : '#fff', boxShadow: panicActivated ? '0 0 40px rgba(239,68,68,0.6)' : 'none' }}>
                 {panicActivated ? '📡 ALERT SENT!' : '🆘 ACTIVATE SOS'}
-              </button>
-              <button className="px-6 py-4 bg-white/20 hover:bg-white/30 backdrop-blur rounded-xl font-semibold">
-                📞 Call 100
-              </button>
+              </motion.button>
+              <motion.button whileHover={{ scale: 1.05 }} className="px-6 py-4 rounded-xl font-semibold text-white" style={{ background: 'rgba(255,255,255,0.15)' }}>📞 Call 100</motion.button>
             </div>
           </div>
           <div className="hidden md:block">
-            <div className={`w-40 h-40 rounded-full flex items-center justify-center ${
-              panicActivated ? 'bg-white animate-pulse' : 'bg-white/20 backdrop-blur'
-            } shadow-2xl`}>
-              <AlertTriangle className={`h-20 w-20 ${panicActivated ? 'text-danger-600' : 'text-white'}`} />
-            </div>
+            <motion.div animate={panicActivated ? { scale: [1, 1.1, 1] } : {}} transition={{ duration: 0.5, repeat: panicActivated ? Infinity : 0 }}
+              className="w-40 h-40 rounded-full flex items-center justify-center" style={{ background: panicActivated ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.1)', boxShadow: panicActivated ? '0 0 60px rgba(239,68,68,0.5)' : '0 0 20px rgba(239,68,68,0.2)' }}>
+              <AlertTriangle className={`h-20 w-20 ${panicActivated ? 'text-red-600 animate-bounce' : 'text-white'}`} />
+            </motion.div>
           </div>
         </div>
         {panicActivated && (
-          <div className="mt-4 bg-white/20 backdrop-blur rounded-lg p-4 animate-pulse">
-            <p className="font-bold text-lg">✅ Emergency Alert Activated!</p>
-            <p className="text-sm text-danger-100 mt-1">
-              📍 Location shared • 🚓 Police notified (ETA: 3 mins) • 🚑 Ambulance on standby • 📞 Emergency contacts alerted
-            </p>
-          </div>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-4 rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.1)' }}>
+            <p className="font-bold text-white text-lg">✅ Emergency Alert Activated!</p>
+            <p className="text-sm mt-1" style={{ color: 'rgba(254,202,202,0.8)' }}>📍 Location shared • 🚓 Police notified (ETA: 3 mins) • 🚑 Ambulance on standby</p>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
 
-  
+      {/* Emergency Contacts */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {emergencyContacts.map((contact) => {
           const Icon = contact.icon
           return (
-            <div
-              key={contact.id}
-              className="card cursor-pointer hover:shadow-xl transition-all"
-              onClick={() => setSelectedEmergency(contact)}
-            >
-              <div className={`bg-gradient-to-br ${getColorClasses(contact.color)} text-white rounded-lg p-4 mb-3`}>
-                <Icon className="h-8 w-8 mb-2" />
-                <p className="font-semibold">{contact.type}</p>
+            <motion.div key={contact.id} variants={itemAnim} whileHover={{ scale: 1.05, y: -5 }} className="p-5 cursor-pointer" style={glass} onClick={() => setSelectedEmergency(contact)}>
+              <div className="rounded-xl p-4 mb-3" style={{ background: contact.gradient }}>
+                <Icon className="h-8 w-8 text-white mb-2" />
+                <p className="font-semibold text-white">{contact.type}</p>
               </div>
-              <p className="text-3xl font-bold text-gray-900 mb-2">{contact.number}</p>
-              <p className="text-sm text-gray-600 mb-2">{contact.description}</p>
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                <Clock className="h-3 w-3" />
-                <span>{contact.avgResponseTime}</span>
+              <p className="text-3xl font-bold text-white mb-2">{contact.number}</p>
+              <p className="text-sm mb-2" style={{ color: 'rgba(199,210,254,0.6)' }}>{contact.description}</p>
+              <div className="flex items-center gap-2 text-xs mb-3" style={{ color: 'rgba(199,210,254,0.4)' }}>
+                <Clock className="h-3 w-3" /><span>{contact.avgResponseTime}</span>
               </div>
-              <button className="w-full mt-3 bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 font-semibold">
-                📞 Call Now
-              </button>
-            </div>
+              <motion.button whileHover={{ scale: 1.05 }} className="w-full py-2 rounded-xl font-semibold text-white" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 4px 15px rgba(99,102,241,0.3)' }}>📞 Call Now</motion.button>
+            </motion.div>
           )
         })}
       </div>
 
-    
-      <div className="card">
-        <h3 className="text-xl font-bold mb-4 flex items-center">
-          <MapPin className="h-6 w-6 mr-2 text-primary-600" />
-          Nearby Emergency Services
-        </h3>
+      {/* Nearby Services */}
+      <motion.div variants={itemAnim} className="p-6" style={glass}>
+        <h3 className="text-xl font-bold text-white mb-4 flex items-center"><MapPin className="h-6 w-6 mr-2" style={{ color: '#818cf8' }} />Nearby Emergency Services</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {nearbyEmergencyServices.map((service, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+            <motion.div key={index} whileHover={{ scale: 1.02 }} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.75rem' }}>
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-bold text-gray-900">{service.name}</h4>
-                    <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded-full text-xs font-semibold">
-                      {service.type}
-                    </span>
+                    <h4 className="font-bold text-white">{service.name}</h4>
+                    <span className="px-2 py-1 rounded-full text-xs font-semibold" style={{ background: 'rgba(99,102,241,0.2)', color: '#a5b4fc' }}>{service.type}</span>
                   </div>
-                  <p className="text-sm text-gray-600">{service.address}</p>
+                  <p className="text-sm" style={{ color: 'rgba(199,210,254,0.5)' }}>{service.address}</p>
                 </div>
                 <div className="text-right">
-                  <div className="flex items-center gap-1 mb-1">
-                    <span className="text-yellow-500">⭐</span>
-                    <span className="font-semibold">{service.rating}</span>
-                  </div>
-                  <p className="text-xs text-gray-500">{service.distance}</p>
+                  <div className="flex items-center gap-1 mb-1"><span>⭐</span><span className="font-semibold text-white">{service.rating}</span></div>
+                  <p className="text-xs" style={{ color: 'rgba(199,210,254,0.4)' }}>{service.distance}</p>
                 </div>
               </div>
-
               <div className="flex flex-wrap gap-2 mb-3">
-                {service.facilities.map((facility, idx) => (
-                  <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
-                    {facility}
-                  </span>
-                ))}
+                {service.facilities.map((f, idx) => (<span key={idx} className="px-2 py-1 rounded text-xs" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(199,210,254,0.6)' }}>{f}</span>))}
               </div>
-
               <div className="flex gap-2">
-                <button className="flex-1 bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 font-semibold text-sm">
-                  <Phone className="inline h-4 w-4 mr-1" />
-                  Call
-                </button>
-                <button className="flex-1 bg-success-600 text-white py-2 rounded-lg hover:bg-success-700 font-semibold text-sm">
-                  <Navigation className="inline h-4 w-4 mr-1" />
-                  Navigate
-                </button>
+                <motion.button whileHover={{ scale: 1.05 }} className="flex-1 py-2 rounded-xl font-semibold text-sm text-white" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}><Phone className="inline h-4 w-4 mr-1" />Call</motion.button>
+                <motion.button whileHover={{ scale: 1.05 }} className="flex-1 py-2 rounded-xl font-semibold text-sm text-white" style={{ background: 'linear-gradient(135deg, #10b981, #34d399)' }}><Navigation className="inline h-4 w-4 mr-1" />Navigate</motion.button>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
-  
-      <div className="card">
-        <h3 className="text-xl font-bold mb-4">Embassy/Consulate Contacts</h3>
+      {/* Embassy */}
+      <motion.div variants={itemAnim} className="p-6" style={glass}>
+        <h3 className="text-xl font-bold text-white mb-4">Embassy/Consulate Contacts</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {embassyContacts.map((embassy, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+            <motion.div key={index} whileHover={{ scale: 1.03 }} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.75rem' }}>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-2xl">🏛️</span>
-                <div>
-                  <h4 className="font-bold text-gray-900">{embassy.country}</h4>
-                  <p className="text-xs text-gray-600">{embassy.city}</p>
-                </div>
+                <div><h4 className="font-bold text-white">{embassy.country}</h4><p className="text-xs" style={{ color: 'rgba(199,210,254,0.4)' }}>{embassy.city}</p></div>
               </div>
-              <p className="font-mono font-semibold text-primary-600 mb-2">{embassy.phone}</p>
-              <button className="w-full bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 font-semibold text-sm">
-                Call Embassy
-              </button>
-            </div>
+              <p className="font-mono font-semibold mb-2" style={{ color: '#a5b4fc' }}>{embassy.phone}</p>
+              <motion.button whileHover={{ scale: 1.05 }} className="w-full py-2 rounded-xl font-semibold text-sm text-white" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>Call Embassy</motion.button>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
-
-      <div className="card bg-warning-50 border-2 border-warning-300">
-        <h3 className="text-xl font-bold text-warning-900 mb-4">⚠️ Emergency Preparedness Checklist</h3>
+      {/* Checklist */}
+      <motion.div variants={itemAnim} className="p-6" style={{ ...glass, background: 'rgba(250,204,21,0.06)', border: '1px solid rgba(250,204,21,0.15)' }}>
+        <h3 className="text-xl font-bold text-white mb-4">⚠️ Emergency Preparedness Checklist</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {[
-            'Tourist ID card saved on phone',
-            'Emergency contacts programmed in phone',
-            'Location services enabled',
-            'Phone fully charged',
-            'Know your hotel address',
-            'Know your blood group',
-            'Travel insurance details accessible',
-            'Embassy contact number saved'
-          ].map((item, index) => (
-            <div key={index} className="flex items-center gap-2 bg-white p-3 rounded-lg">
-              <input type="checkbox" className="h-5 w-5 text-warning-600" />
-              <span className="text-gray-700">{item}</span>
+          {['Tourist ID card saved on phone', 'Emergency contacts programmed', 'Location services enabled', 'Phone fully charged', 'Know your hotel address', 'Know your blood group', 'Travel insurance details accessible', 'Embassy contact number saved'].map((item, index) => (
+            <div key={index} className="flex items-center gap-2 p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)' }}>
+              <input type="checkbox" className="h-5 w-5 accent-indigo-500" />
+              <span className="text-white">{item}</span>
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
-    
+      {/* Modal */}
       {selectedEmergency && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-gray-900">{selectedEmergency.type}</h3>
-                <button
-                  onClick={() => setSelectedEmergency(null)}
-                  className="text-gray-500 hover:text-gray-700 text-2xl"
-                >
-                  ×
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <div className="bg-primary-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Emergency Number</p>
-                  <p className="text-4xl font-bold text-primary-600">{selectedEmergency.number}</p>
-                </div>
-
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Description</p>
-                  <p className="text-gray-900">{selectedEmergency.description}</p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-600 mb-1">Response Time</p>
-                    <p className="font-semibold text-gray-900">{selectedEmergency.avgResponseTime}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600 mb-1">Availability</p>
-                    <p className="font-semibold text-gray-900">
-                      {selectedEmergency.available247 ? '24/7' : 'Limited Hours'}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="bg-warning-50 border border-warning-200 p-3 rounded-lg">
-                  <p className="text-sm text-warning-900">
-                    <strong>Note:</strong> This is a toll-free emergency number. Your location will be automatically shared when you call.
-                  </p>
-                </div>
-
-                <button className="w-full bg-primary-600 text-white py-3 rounded-lg hover:bg-primary-700 font-bold text-lg">
-                  📞 Call {selectedEmergency.number} Now
-                </button>
-              </div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
+          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="max-w-lg w-full rounded-2xl p-6" style={{ background: 'linear-gradient(135deg, #1a1a4e, #302b63)', border: '1px solid rgba(255,255,255,0.15)', boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-white">{selectedEmergency.type}</h3>
+              <button onClick={() => setSelectedEmergency(null)} className="text-white/50 hover:text-white text-2xl">×</button>
             </div>
-          </div>
-        </div>
+            <div className="space-y-4">
+              <div className="rounded-xl p-4" style={{ background: 'rgba(99,102,241,0.15)' }}>
+                <p className="text-sm" style={{ color: 'rgba(199,210,254,0.5)' }}>Emergency Number</p>
+                <p className="text-4xl font-bold" style={{ color: '#818cf8' }}>{selectedEmergency.number}</p>
+              </div>
+              <div><p className="text-sm" style={{ color: 'rgba(199,210,254,0.5)' }}>Description</p><p className="text-white">{selectedEmergency.description}</p></div>
+              <div className="grid grid-cols-2 gap-4">
+                <div><p className="text-sm" style={{ color: 'rgba(199,210,254,0.5)' }}>Response Time</p><p className="font-semibold text-white">{selectedEmergency.avgResponseTime}</p></div>
+                <div><p className="text-sm" style={{ color: 'rgba(199,210,254,0.5)' }}>Availability</p><p className="font-semibold text-white">{selectedEmergency.available247 ? '24/7' : 'Limited'}</p></div>
+              </div>
+              <motion.button whileHover={{ scale: 1.03 }} className="w-full py-3 rounded-xl font-bold text-lg text-white" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 4px 20px rgba(99,102,241,0.4)' }}>📞 Call {selectedEmergency.number} Now</motion.button>
+            </div>
+          </motion.div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   )
 }
 
